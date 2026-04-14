@@ -1,137 +1,172 @@
-<p align="center">
-  <img src="docs/teaser_v1.jpg" width="700">
-  <h1 align="center">VLFM: Vision-Language Frontier Maps for Zero-Shot Semantic Navigation</h1>
-  <h3 align="center">
-    <a href="http://naoki.io/">Naoki Yokoyama</a>, <a href="https://faculty.cc.gatech.edu/~sha9/">Sehoon Ha</a>, <a href="https://faculty.cc.gatech.edu/~dbatra/">Dhruv Batra</a>, <a href="https://www.robo.guru/about.html">Jiuguang Wang</a>, <a href="https://bucherb.github.io">Bernadette Bucher</a>
-  </h3>
-  <p align="center">
-    <a href="http://naoki.io/portfolio/vlfm.html">Project Website</a> , <a href="https://arxiv.org/abs/2312.03275">Paper (arXiv)</a>
-  </p>
-  <p align="center">
-    <a href="https://github.com/bdaiinstitute/vlfm">
-      <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-    </a>
-    <a href="https://www.python.org/">
-      <img src="https://img.shields.io/badge/built%20with-Python3-red.svg" />
-    </a>
-    <a href="https://github.com/jiuguangw/Agenoria/actions">
-      <img src="https://github.com/bdaiinstitute/vlfm/actions/workflows/test.yml/badge.svg">
-    </a>
-    <a href="https://github.com/psf/black">
-      <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
-    </a>
-    <a href="https://github.com/astral-sh/ruff">
-      <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json">
-    </a>
-    <a href="https://github.com/python/mypy">
-      <img src="http://www.mypy-lang.org/static/mypy_badge.svg">
-    </a>
-  </p>
-</p>
+# VLN-UQ: Uncertainty-Aware Zero-Shot ObjectNav Check-in
 
-## :sparkles: Overview
+This repository is a course check-in workspace built on top of the official
+[VLFM](https://github.com/bdaiinstitute/vlfm) codebase:
+Vision-Language Frontier Maps for Zero-Shot Semantic Navigation
+([paper](https://arxiv.org/abs/2312.03275)).
 
-Understanding how humans leverage semantic knowledge to navigate unfamiliar environments and decide where to explore next is pivotal for developing robots capable of human-like search behaviors. We introduce a zero-shot navigation approach, Vision-Language Frontier Maps (VLFM), which is inspired by human reasoning and designed to navigate towards unseen semantic objects in novel environments. VLFM builds occupancy maps from depth observations to identify frontiers, and leverages RGB observations and a pre-trained vision-language model to generate a language-grounded value map. VLFM then uses this map to identify the most promising frontier to explore for finding an instance of a given target object category. We evaluate VLFM in photo-realistic environments from the Gibson, Habitat-Matterport 3D (HM3D), and Matterport 3D (MP3D) datasets within the Habitat simulator. Remarkably, VLFM achieves state-of-the-art results on all three datasets as measured by success weighted by path length (SPL) for the Object Goal Navigation task. Furthermore, we show that VLFM's zero-shot nature enables it to be readily deployed on real-world robots such as the Boston Dynamics Spot mobile manipulation platform. We deploy VLFM on Spot and demonstrate its capability to efficiently navigate to target objects within an office building in the real world, without any prior knowledge of the environment. The accomplishments of VLFM underscore the promising potential of vision-language models in advancing the field of semantic navigation.
+The current goal is modest and concrete: keep a working VLFM baseline,
+add a geometry-only frontier baseline, and compare them on matched HM3D
+ObjectNav episodes before moving on to uncertainty-aware methods.
 
-## :hammer_and_wrench: Installation
+## What This Repo Adds
 
-### Getting Started
-Create the conda environment:
+- A `frontier_selector` switch with `semantic`, `nearest`, and `cheapest`
+  options
+- A geometry-only cheapest-frontier baseline for paired comparison
+- Resume-safe single-environment evaluation with `ZSOS_LOG_DIR`
+- Local experiment scripts for alignment checks and paired summaries
+- Repro artifacts for the smoke test, pilot run, and extended 90-episode run
+
+## Current Status
+
+- Official VLFM baseline runs locally in Habitat
+- Local VLM server launch flow is available via
+  `scripts/launch_vlm_servers_local.sh`
+- HM3D `val_mini` pilot comparison is complete
+- A fixed 5-scene / 90-episode extended comparison is complete
+- Failure-case notes are recorded for the first check-in pass
+
+## Main Results
+
+### Pilot Comparison: 30 Episodes on `val_mini`
+
+| Method | Episodes | Success | SPL | SoftSPL |
+|---|---:|---:|---:|---:|
+| VLFM Original | 30 | 53.33% | 32.12% | 33.82% |
+| Greedy Frontier (`cheapest`) | 30 | 53.33% | 30.20% | 35.64% |
+
+- Paired delta success: `+0.000`
+- Paired delta SPL: `+0.019`
+- Success flips: `4`
+
+### Extended Comparison: 90 Episodes on `val_5scene_90`
+
+| Method | Episodes | Success | SPL | SoftSPL |
+|---|---:|---:|---:|---:|
+| VLFM Original | 90 | 51.11% | 30.04% | 36.79% |
+| Greedy Frontier (`cheapest`) | 90 | 50.00% | 29.88% | 36.58% |
+
+- Paired delta success: `+0.011`
+- Paired delta SPL: `+0.002`
+- Paired delta SoftSPL: `+0.002`
+- Success flips: `9`
+- Wall time:
+  - VLFM Original: `4663.42s`
+  - Greedy Frontier: `3368.81s`
+
+The main check-in takeaway is that the semantic policy is only slightly better
+than the geometry-only baseline on the 90-episode matched split, while the
+baseline runs noticeably faster. That leaves a useful opening for uncertainty-
+aware ranking or stop-gating to earn its keep.
+
+## Important Paths
+
+- Pilot summary:
+  - `results/pilot/summary.txt`
+- Pilot failure cases:
+  - `results/pilot/failure_cases/failure_analysis.md`
+- Extended run summary:
+  - `results/val5scene90/summary.txt`
+- Extended run alignment check:
+  - `results/val5scene90/episode_alignment_check.txt`
+- Extended experiment record:
+  - `repro/step8_6_experiment_log.md`
+- Component audit:
+  - `repro/component_audit.md`
+
+## Local Environment Notes
+
+Two conda environments were used during setup:
+
+- `VLFM`
+  - closest to the original dependency set
+  - good for compatibility and CPU-side checks
+- `VLFM_gpu`
+  - practical local environment for the RTX 5060 Ti
+  - recommended for actual evaluation runs in this workspace
+
+## Quick Start
+
+### 1. Activate the GPU-ready environment
+
 ```bash
-conda_env_name=vlfm
-conda create -n $conda_env_name python=3.9 -y
-conda activate $conda_env_name
-pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 -f https://download.pytorch.org/whl/torch_stable.html
-pip install git+https://github.com/IDEA-Research/GroundingDINO.git@eeba084341aaa454ce13cb32fa7fd9282fc73a67 salesforce-lavis==1.0.2
+conda activate VLFM_gpu
+cd /path/to/vlfm-main
 ```
-If you are using habitat and are doing simulation experiments, install this repo into your env with the following:
+
+### 2. Start the local VLM servers
+
 ```bash
-pip install -e .[habitat]
+bash scripts/launch_vlm_servers_local.sh
 ```
-If you are using the Spot robot, install this repo into your env with the following:
+
+When done:
+
 ```bash
-pip install -e .[reality]
+bash scripts/stop_vlm_servers_local.sh
 ```
-#### [Whether you're using conda or not]
-Clone the following repo within this one (simply cloning will suffice):
+
+### 3. Smoke test
+
 ```bash
-git clone git@github.com:WongKinYiu/yolov7.git
+EPISODES=1 scripts/run_vlfm_episode_local.sh
 ```
 
-## :dart: Downloading the HM3D dataset
+### 4. Pilot comparison
 
-### Matterport
-First, set the following variables during installation (don't need to put in .bashrc):
 ```bash
-MATTERPORT_TOKEN_ID=<FILL IN FROM YOUR ACCOUNT INFO IN MATTERPORT>
-MATTERPORT_TOKEN_SECRET=<FILL IN FROM YOUR ACCOUNT INFO IN MATTERPORT>
-DATA_DIR=</path/to/vlfm/data>
+ZSOS_LOG_DIR=results/pilot/vlfm_original_jsons \
+EPISODES=30 scripts/run_vlfm_episode_local.sh \
+  habitat_baselines.rl.policy.frontier_selector=semantic
 
-# Link to the HM3D ObjectNav episodes dataset, listed here:
-# https://github.com/facebookresearch/habitat-lab/blob/main/DATASETS.md#task-datasets
-# From the above page, locate the link to the HM3D ObjectNav dataset.
-# Verify that it is the same as the next two lines.
-HM3D_OBJECTNAV=https://dl.fbaipublicfiles.com/habitat/data/datasets/objectnav/hm3d/v1/objectnav_hm3d_v1.zip
+ZSOS_LOG_DIR=results/pilot/greedy_frontier_jsons \
+EPISODES=30 scripts/run_vlfm_episode_local.sh \
+  habitat_baselines.rl.policy.frontier_selector=cheapest
 ```
 
-### Clone and install habitat-lab, then download datasets
-*Ensure that the correct conda environment is activated!!*
+### 5. Extended 90-episode comparison
+
 ```bash
-# Download HM3D 3D scans (scenes_dataset)
-python -m habitat_sim.utils.datasets_download \
-  --username $MATTERPORT_TOKEN_ID --password $MATTERPORT_TOKEN_SECRET \
-  --uids hm3d_train_v0.2 \
-  --data-path $DATA_DIR &&
-python -m habitat_sim.utils.datasets_download \
-  --username $MATTERPORT_TOKEN_ID --password $MATTERPORT_TOKEN_SECRET \
-  --uids hm3d_val_v0.2 \
-  --data-path $DATA_DIR &&
-
-# Download HM3D ObjectNav dataset episodes
-wget $HM3D_OBJECTNAV &&
-unzip objectnav_hm3d_v1.zip &&
-mkdir -p $DATA_DIR/datasets/objectnav/hm3d  &&
-mv objectnav_hm3d_v1 $DATA_DIR/datasets/objectnav/hm3d/v1 &&
-rm objectnav_hm3d_v1.zip
+bash scripts/run_step8_6_90.sh
 ```
 
-## :weight_lifting: Downloading weights for various models
-The weights for MobileSAM, GroundingDINO, and PointNav must be saved to the `data/` directory. The weights can be downloaded from the following links:
-- `mobile_sam.pt`:  https://github.com/ChaoningZhang/MobileSAM
-- `groundingdino_swint_ogc.pth`: https://github.com/IDEA-Research/GroundingDINO
-- `yolov7-e6e.pt`: https://github.com/WongKinYiu/yolov7
-- `pointnav_weights.pth`: included inside the [data](data) subdirectory
+### 6. Summarize results
 
-## :arrow_forward: Evaluation within Habitat
-To run evaluation, various models must be loaded in the background first. This only needs to be done once by running the following command:
 ```bash
-./scripts/launch_vlm_servers.sh
+python scripts/parse_jsons.py results/pilot/vlfm_original_jsons
+python scripts/parse_jsons.py results/pilot/greedy_frontier_jsons
+python scripts/summarize_paired.py \
+  --vlfm-dir results/pilot/vlfm_original_jsons \
+  --baseline-dir results/pilot/greedy_frontier_jsons
+
+python scripts/parse_jsons.py results/val5scene90/vlfm_original_jsons
+python scripts/parse_jsons.py results/val5scene90/greedy_frontier_jsons
+python scripts/summarize_paired.py \
+  --vlfm-dir results/val5scene90/vlfm_original_jsons \
+  --baseline-dir results/val5scene90/greedy_frontier_jsons
 ```
-(You may need to run `chmod +x` on this file first.)
-This command will create a tmux session that will start loading the various models used for VLFM and serving them through `flask`. When you are done, be sure to kill the tmux session to free up your GPU.
 
-Run the following to evaluate on the HM3D dataset:
-```bash
-python -m vlfm.run
+## Data and Weights
+
+This repository does not store HM3D scenes, dataset archives, or large model
+weights. Download them separately into `data/` as described by the original
+VLFM / Habitat setup flow.
+
+## Repository Layout
+
+```text
+configs/                 Habitat and policy configs
+eval/                    Episode manifests and protocols
+repro/                   Reproducibility notes and experiment records
+results/pilot/           30-episode pilot outputs
+results/val5scene90/     90-episode extended outputs
+scripts/                 Run, analysis, and helper scripts
+vlfm/                    Main policy and trainer code
 ```
-To evaluate on MP3D, run the following:
-```bash
-python -m vlfm.run habitat.dataset.data_path=data/datasets/objectnav/mp3d/val/val.json.gz
-```
 
-## :newspaper: License
+## Upstream Attribution
 
-VLFM is released under the [MIT License](LICENSE). This code was produced as part of Naoki Yokoyama's internship at the Boston Dynamics AI Institute in Summer 2023 and is provided "as is" without active maintenance. For questions, please contact [Naoki Yokoyama](http://naoki.io) or [Jiuguang Wang](https://www.robo.guru).
-
-## :black_nib: Citation
-
-If you use VLFM in your research, please use the following BibTeX entry.
-
-```
-@inproceedings{yokoyama2024vlfm,
-  title={VLFM: Vision-Language Frontier Maps for Zero-Shot Semantic Navigation},
-  author={Naoki Yokoyama and Sehoon Ha and Dhruv Batra and Jiuguang Wang and Bernadette Bucher},
-  booktitle={International Conference on Robotics and Automation (ICRA)},
-  year={2024}
-}
-```
+This repository started from the official VLFM implementation by Naoki
+Yokoyama, Sehoon Ha, Dhruv Batra, Jiuguang Wang, and Bernadette Bucher.
+Please cite the original VLFM paper if you use the underlying method.

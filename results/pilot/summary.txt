@@ -1,0 +1,113 @@
+=== VLFM Original ===
+
+Total episodes: 30
+
+
+Metric   | Average
+---------+--------
+Success  | 53.33% 
+SPL      | 32.12% 
+Soft SPL | 33.82% 
+Failure Cause                                            | Frequency | Percentage
+---------------------------------------------------------+-----------+-----------
+succeeded!                                               | 16        | 53.33%    
+false_positive                                           | 9         | 30.00%    
+false_negative                                           | 2         | 6.67%     
+never_saw_target_did_not_travel_stairs_likely_infeasible | 2         | 6.67%     
+bad_stop_true_positive                                   | 1         | 3.33%     
+
+Category     | Average Failure Rate
+-------------+---------------------
+potted plant | 100.00% (5/5)       
+bed          | 42.86% (3/7)        
+toilet       | 60.00% (3/5)        
+tv           | 66.67% (2/3)        
+chair        | 14.29% (1/7)        
+couch        | 0.00% (0/3)         
+
+Conditioned on failure cause: false_positive
+Category     | % Occurrence for false_positive
+-------------+--------------------------------
+potted plant | 55.56% (5)                     
+tv           | 22.22% (2)                     
+toilet       | 11.11% (1)                     
+chair        | 11.11% (1)                     
+
+Conditioned on failure cause: false_negative
+Category | % Occurrence for false_negative
+---------+--------------------------------
+bed      | 100.00% (2)                    
+
+=== Greedy Frontier Baseline ===
+
+Total episodes: 30
+
+
+Metric   | Average
+---------+--------
+Success  | 53.33% 
+SPL      | 30.20% 
+Soft SPL | 35.64% 
+Failure Cause                                            | Frequency | Percentage
+---------------------------------------------------------+-----------+-----------
+succeeded!                                               | 16        | 53.33%    
+false_positive                                           | 9         | 30.00%    
+bad_stop_true_positive                                   | 2         | 6.67%     
+never_saw_target_did_not_travel_stairs_likely_infeasible | 2         | 6.67%     
+false_negative                                           | 1         | 3.33%     
+
+Category     | Average Failure Rate
+-------------+---------------------
+potted plant | 100.00% (5/5)       
+toilet       | 60.00% (3/5)        
+bed          | 28.57% (2/7)        
+chair        | 28.57% (2/7)        
+tv           | 66.67% (2/3)        
+couch        | 0.00% (0/3)         
+
+Conditioned on failure cause: false_positive
+Category     | % Occurrence for false_positive
+-------------+--------------------------------
+potted plant | 55.56% (5)                     
+tv           | 22.22% (2)                     
+toilet       | 11.11% (1)                     
+chair        | 11.11% (1)                     
+
+Conditioned on failure cause: false_negative
+Category | % Occurrence for false_negative
+---------+--------------------------------
+chair    | 100.00% (1)                    
+
+
+=== VLFM Original (n=30) ===
+  Success:  0.533 +/- 0.182
+  SPL:      0.321 +/- 0.128
+  SoftSPL:  0.338 +/- 0.123
+  Dist2Goal:6.729
+  Failure causes:
+    - false_positive: 9
+    - never_saw_target_did_not_travel_stairs_likely_infeasible: 2
+    - false_negative: 2
+    - bad_stop_true_positive: 1
+
+=== Greedy Frontier (n=30) ===
+  Success:  0.533 +/- 0.182
+  SPL:      0.302 +/- 0.116
+  SoftSPL:  0.356 +/- 0.103
+  Dist2Goal:5.857
+  Failure causes:
+    - false_positive: 9
+    - never_saw_target_did_not_travel_stairs_likely_infeasible: 2
+    - bad_stop_true_positive: 2
+    - false_negative: 1
+
+=== Paired (n=30) ===
+  mean Delta Success (VLFM - Baseline): +0.000 +/- 0.133
+  mean Delta SPL     (VLFM - Baseline): +0.019 +/- 0.073
+  mean Delta SoftSPL (VLFM - Baseline): -0.018 +/- 0.068
+  success flips: 4
+  Flip episodes:
+    - scene=TEEsavR23oF ep=10 VLFM=0(false_negative) Baseline=1(did_not_fail)
+    - scene=wcojb4TFT35 ep=10 VLFM=1(did_not_fail) Baseline=0(false_positive)
+    - scene=wcojb4TFT35 ep=13 VLFM=1(did_not_fail) Baseline=0(false_negative)
+    - scene=wcojb4TFT35 ep=2 VLFM=0(false_positive) Baseline=1(did_not_fail)

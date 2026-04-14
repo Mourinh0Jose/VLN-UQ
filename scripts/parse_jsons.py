@@ -6,7 +6,28 @@ import os
 from collections import Counter
 from typing import Any, Dict, List
 
-from prettytable import PrettyTable
+try:
+    from prettytable import PrettyTable
+except ImportError:
+    class PrettyTable:  # type: ignore[override]
+        def __init__(self, field_names: List[str]) -> None:
+            self.field_names = field_names
+            self._rows: List[List[Any]] = []
+
+        def add_row(self, row: List[Any]) -> None:
+            self._rows.append(row)
+
+        def __str__(self) -> str:
+            rows = [self.field_names] + self._rows
+            widths = [max(len(str(row[i])) for row in rows) for i in range(len(self.field_names))]
+
+            def fmt(row: List[Any]) -> str:
+                return " | ".join(str(cell).ljust(widths[i]) for i, cell in enumerate(row))
+
+            separator = "-+-".join("-" * width for width in widths)
+            body = [fmt(self.field_names), separator]
+            body.extend(fmt(row) for row in self._rows)
+            return "\n".join(body)
 
 
 def read_json_files(directory: str) -> List[Dict[str, Any]]:

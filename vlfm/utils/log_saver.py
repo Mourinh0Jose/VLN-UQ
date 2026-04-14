@@ -6,13 +6,18 @@ import time
 from typing import Dict, Union
 
 
+def _normalize_scene_id(scene_id: str) -> str:
+    return os.path.basename(scene_id).split(".")[0]
+
+
 def log_episode(episode_id: Union[str, int], scene_id: str, data: Dict) -> None:
     log_dir = os.environ["ZSOS_LOG_DIR"]
     try:
         os.makedirs(log_dir, exist_ok=True)
     except Exception:
         pass
-    base = f"{episode_id}_{scene_id}.json"
+    scene = _normalize_scene_id(scene_id)
+    base = f"{episode_id}_{scene}.json"
     filename = os.path.join(log_dir, base)
 
     # Skip if the filename already exists AND it isn't empty
@@ -24,7 +29,8 @@ def log_episode(episode_id: Union[str, int], scene_id: str, data: Dict) -> None:
 
 def is_evaluated(episode_id: Union[str, int], scene_id: str) -> bool:
     log_dir = os.environ["ZSOS_LOG_DIR"]
-    base = f"{episode_id}_{scene_id}.json"
+    scene = _normalize_scene_id(scene_id)
+    base = f"{episode_id}_{scene}.json"
     filename = os.path.join(log_dir, base)
 
     # Return false if the directory doesn't exist

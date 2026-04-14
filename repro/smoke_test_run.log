@@ -1,0 +1,1342 @@
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+/home/jose/anaconda3/envs/VLFM_gpu/lib/python3.9/site-packages/fairscale/experimental/nn/offload.py:19: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  return torch.cuda.amp.custom_fwd(orig_func)  # type: ignore
+/home/jose/anaconda3/envs/VLFM_gpu/lib/python3.9/site-packages/fairscale/experimental/nn/offload.py:30: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  return torch.cuda.amp.custom_bwd(orig_func)  # type: ignore
+2026-04-13 07:40:37,727 env config: habitat_baselines:
+  evaluate: true
+  trainer_name: vlfm
+  updater_name: PPO
+  distrib_updater_name: DDPPO
+  torch_gpu_id: 0
+  tensorboard_dir: tb
+  writer_type: tb
+  video_dir: video_dir
+  video_fps: 10
+  test_episode_count: 1
+  eval_ckpt_path_dir: data/dummy_policy.pth
+  num_environments: 1
+  num_processes: -1
+  rollout_storage_name: RolloutStorage
+  checkpoint_folder: data/new_checkpoints
+  num_updates: 270000
+  num_checkpoints: 100
+  checkpoint_interval: -1
+  total_num_steps: -1.0
+  log_interval: 10
+  log_file: train.log
+  force_blind_policy: false
+  verbose: true
+  eval_keys_to_include_in_name: []
+  force_torch_single_threaded: true
+  wb:
+    project_name: ''
+    entity: ''
+    group: ''
+    run_name: ''
+  load_resume_state_config: false
+  eval:
+    split: val_mini
+    use_ckpt_config: true
+    should_load_ckpt: true
+    evals_per_ep: 1
+    video_option: []
+    extra_sim_sensors: {}
+  profiling:
+    capture_start_step: -1
+    num_steps_to_capture: -1
+  rl:
+    agent:
+      type: SingleAgentAccessMgr
+    preemption:
+      append_slurm_job_id: false
+      save_resume_state_interval: 100
+      save_state_batch_only: false
+    policy:
+      name: HabitatITMPolicyV2
+      action_distribution_type: categorical
+      action_dist:
+        use_log_std: true
+        use_softplus: false
+        std_init: ???
+        log_std_init: 0.0
+        use_std_param: false
+        clamp_std: true
+        min_std: 1.0e-06
+        max_std: 1
+        min_log_std: -5
+        max_log_std: 2
+        action_activation: tanh
+        scheduled_std: false
+      obs_transforms: {}
+      hierarchical_policy: ???
+      text_prompt: Seems like there is a target_object ahead.
+      pointnav_policy_path: data/pointnav_weights.pth
+      depth_image_shape:
+      - 224
+      - 224
+      pointnav_stop_radius: 0.9
+      use_max_confidence: false
+      object_map_erosion_size: 5
+      exploration_thresh: 0.0
+      obstacle_map_area_threshold: 1.5
+      min_obstacle_height: 0.61
+      max_obstacle_height: 0.88
+      hole_area_thresh: 100000
+      use_vqa: false
+      vqa_prompt: 'Is this '
+      coco_threshold: 0.8
+      non_coco_threshold: 0.4
+      agent_radius: 0.18
+    ppo:
+      clip_param: 0.2
+      ppo_epoch: 4
+      num_mini_batch: 2
+      value_loss_coef: 0.5
+      entropy_coef: 0.01
+      lr: 0.00025
+      eps: 1.0e-05
+      max_grad_norm: 0.2
+      num_steps: 64
+      use_gae: true
+      use_linear_lr_decay: false
+      use_linear_clip_decay: false
+      gamma: 0.99
+      tau: 0.95
+      reward_window_size: 50
+      use_normalized_advantage: false
+      hidden_size: 512
+      entropy_target_factor: 0.0
+      use_adaptive_entropy_pen: false
+      use_clipped_value_loss: true
+      use_double_buffered_sampler: false
+    ddppo:
+      sync_frac: 0.6
+      distrib_backend: NCCL
+      rnn_type: LSTM
+      num_recurrent_layers: 2
+      backbone: resnet50
+      pretrained_weights: data/ddppo-models/gibson-2plus-resnet50.pth
+      pretrained: false
+      pretrained_encoder: false
+      train_encoder: true
+      reset_critic: false
+      force_distributed: false
+    ver:
+      variable_experience: true
+      num_inference_workers: 2
+      overlap_rollouts_and_learn: false
+    auxiliary_losses: {}
+habitat:
+  seed: 100
+  env_task: GymHabitatEnv
+  env_task_gym_dependencies: []
+  env_task_gym_id: ''
+  environment:
+    max_episode_steps: 500
+    max_episode_seconds: 10000000
+    iterator_options:
+      cycle: true
+      shuffle: true
+      group_by_scene: true
+      num_episode_sample: -1
+      max_scene_repeat_episodes: -1
+      max_scene_repeat_steps: 50000
+      step_repetition_range: 0.2
+  simulator:
+    type: Sim-v0
+    action_space_config: v1
+    action_space_config_arguments: {}
+    forward_step_size: 0.25
+    create_renderer: false
+    requires_textures: true
+    auto_sleep: false
+    step_physics: true
+    concur_render: false
+    needs_markers: true
+    update_articulated_agent: true
+    scene: data/scene_datasets/habitat-test-scenes/van-gogh-room.glb
+    scene_dataset: default
+    additional_object_paths: []
+    seed: ${habitat.seed}
+    turn_angle: 30
+    tilt_angle: 30
+    default_agent_id: 0
+    debug_render: false
+    debug_render_articulated_agent: false
+    kinematic_mode: false
+    debug_render_goal: true
+    robot_joint_start_noise: 0.0
+    ctrl_freq: 120.0
+    ac_freq_ratio: 4
+    load_objs: true
+    hold_thresh: 0.15
+    grasp_impulse: 10000.0
+    agents:
+      main_agent:
+        height: 0.88
+        radius: 0.18
+        grasp_managers: 1
+        sim_sensors:
+          rgb_sensor:
+            type: HabitatSimRGBSensor
+            height: 480
+            width: 640
+            position:
+            - 0.0
+            - 0.88
+            - 0.0
+            orientation:
+            - 0.0
+            - 0.0
+            - 0.0
+            hfov: 79
+            sensor_subtype: PINHOLE
+            noise_model: None
+            noise_model_kwargs: {}
+          depth_sensor:
+            type: HabitatSimDepthSensor
+            height: 480
+            width: 640
+            position:
+            - 0.0
+            - 0.88
+            - 0.0
+            orientation:
+            - 0.0
+            - 0.0
+            - 0.0
+            hfov: 79
+            sensor_subtype: PINHOLE
+            noise_model: None
+            noise_model_kwargs: {}
+            min_depth: 0.5
+            max_depth: 5.0
+            normalize_depth: true
+        is_set_start_state: false
+        start_position:
+        - 0.0
+        - 0.0
+        - 0.0
+        start_rotation:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 1.0
+        joint_start_noise: 0.1
+        articulated_agent_urdf: data/robots/hab_fetch/robots/hab_fetch.urdf
+        articulated_agent_type: FetchRobot
+        ik_arm_urdf: data/robots/hab_fetch/robots/fetch_onlyarm.urdf
+        motion_data_path: ''
+    agents_order:
+    - main_agent
+    habitat_sim_v0:
+      gpu_device_id: 0
+      gpu_gpu: false
+      allow_sliding: false
+      frustum_culling: true
+      enable_physics: false
+      physics_config_file: ./data/default.physics_config.json
+      leave_context_with_background_renderer: false
+      enable_gfx_replay_save: false
+    ep_info: null
+    object_ids_start: 100
+  task:
+    reward_measure: distance_to_goal_reward
+    success_measure: spl
+    success_reward: 2.5
+    slack_reward: -0.001
+    end_on_success: true
+    type: ObjectNav-v1
+    lab_sensors:
+      objectgoal_sensor:
+        type: ObjectGoalSensor
+        goal_spec: TASK_CATEGORY_ID
+        goal_spec_max_val: 50
+      compass_sensor:
+        type: CompassSensor
+      gps_sensor:
+        type: GPSSensor
+        dimensionality: 2
+      base_explorer:
+        type: BaseExplorer
+        ang_vel: 10.0
+        area_thresh: 3.0
+        forward_step_size: 0.25
+        fov: 79
+        lin_vel: 0.25
+        map_resolution: 256
+        minimize_time: true
+        success_distance: 0.18
+        turn_angle: 30.0
+        visibility_dist: 4.5
+      heading_sensor:
+        type: HeadingSensor
+      frontier_sensor:
+        type: FrontierSensor
+    measurements:
+      distance_to_goal:
+        type: DistanceToGoal
+        distance_to: VIEW_POINTS
+      success:
+        type: Success
+        success_distance: 0.1
+      spl:
+        type: SPL
+      soft_spl:
+        type: SoftSPL
+      distance_to_goal_reward:
+        type: DistanceToGoalReward
+      frontier_exploration_map:
+        type: FrontierExplorationMap
+        max_episode_steps: 1000
+        map_padding: 3
+        map_resolution: 1024
+        draw_source: true
+        draw_border: true
+        draw_shortest_path: true
+        draw_view_points: true
+        draw_goal_positions: true
+        draw_goal_aabbs: true
+        fog_of_war:
+          draw: true
+          visibility_dist: 5.0
+          fov: 90
+        draw_waypoints: true
+      traveled_stairs:
+        type: TraveledStairs
+    goal_sensor_uuid: objectgoal
+    count_obj_collisions: true
+    settle_steps: 5
+    constraint_violation_ends_episode: true
+    constraint_violation_drops_object: false
+    force_regenerate: false
+    should_save_to_cache: false
+    object_in_hand_sample_prob: 0.167
+    min_start_distance: 3.0
+    render_target: true
+    physics_stability_steps: 1
+    num_spawn_attempts: 200
+    spawn_max_dist_to_obj: 2.0
+    base_angle_noise: 0.523599
+    ee_sample_factor: 0.2
+    ee_exclude_region: 0.0
+    base_noise: 0.05
+    spawn_region_scale: 0.2
+    joint_max_impulse: -1.0
+    desired_resting_position:
+    - 0.5
+    - 0.0
+    - 1.0
+    use_marker_t: true
+    cache_robot_init: false
+    success_state: 0.0
+    should_enforce_target_within_reach: false
+    task_spec_base_path: habitat/task/rearrange/pddl/
+    task_spec: ''
+    pddl_domain_def: replica_cad
+    obj_succ_thresh: 0.3
+    enable_safe_drop: false
+    art_succ_thresh: 0.15
+    robot_at_thresh: 2.0
+    filter_nav_to_tasks: []
+    actions:
+      stop:
+        type: StopAction
+        agent_index: 0
+      move_forward:
+        type: MoveForwardAction
+        agent_index: 0
+      turn_left:
+        type: TurnLeftAction
+        agent_index: 0
+      turn_right:
+        type: TurnRightAction
+        agent_index: 0
+      look_up:
+        type: LookUpAction
+        agent_index: 0
+      look_down:
+        type: LookDownAction
+        agent_index: 0
+  dataset:
+    type: ObjectNav-v1
+    split: val_mini
+    scenes_dir: data/scene_datasets
+    content_scenes:
+    - '*'
+    data_path: data/datasets/objectnav/hm3d/v1/{split}/{split}.json.gz
+  gym:
+    obs_keys: null
+    action_keys: null
+    achieved_goal_keys: []
+    desired_goal_keys: []
+
+2026-04-13 07:40:37,727 Initializing dataset ObjectNav-v1
+0
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+/home/jose/anaconda3/envs/VLFM_gpu/lib/python3.9/site-packages/fairscale/experimental/nn/offload.py:19: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  return torch.cuda.amp.custom_fwd(orig_func)  # type: ignore
+/home/jose/anaconda3/envs/VLFM_gpu/lib/python3.9/site-packages/fairscale/experimental/nn/offload.py:30: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  return torch.cuda.amp.custom_bwd(orig_func)  # type: ignore
+2026-04-13 07:40:40,792 Initializing dataset ObjectNav-v1
+2026-04-13 07:40:40,811 initializing sim Sim-v0
+[07:40:40:819316]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Dataset>: Proposing JSON name : default.scene_dataset_config.json from original name : default| This file does not exist.
+[07:40:40:819370]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (capsule3DSolid:capsule3DSolid_hemiRings_4_cylRings_1_segments_12_halfLen_0.75_useTexCoords_false_useTangents_false) created and registered.
+[07:40:40:819386]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (capsule3DWireframe:capsule3DWireframe_hemiRings_8_cylRings_1_segments_16_halfLen_1) created and registered.
+[07:40:40:819396]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (coneSolid:coneSolid_segments_12_halfLen_1.25_rings_1_useTexCoords_false_useTangents_false_capEnd_true) created and registered.
+[07:40:40:819404]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (coneWireframe:coneWireframe_segments_32_halfLen_1.25) created and registered.
+[07:40:40:819411]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (cubeSolid:cubeSolid) created and registered.
+[07:40:40:819420]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (cubeWireframe:cubeWireframe) created and registered.
+[07:40:40:819432]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (cylinderSolid:cylinderSolid_rings_1_segments_12_halfLen_1_useTexCoords_false_useTangents_false_capEnds_true) created and registered.
+[07:40:40:819443]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (cylinderWireframe:cylinderWireframe_rings_1_segments_32_halfLen_1) created and registered.
+[07:40:40:819452]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (icosphereSolid:icosphereSolid_subdivs_1) created and registered.
+[07:40:40:819460]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (icosphereWireframe:icosphereWireframe_subdivs_1) created and registered.
+[07:40:40:819472]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (uvSphereSolid:uvSphereSolid_rings_8_segments_16_useTexCoords_false_useTangents_false) created and registered.
+[07:40:40:819483]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (uvSphereWireframe:uvSphereWireframe_rings_16_segments_32) created and registered.
+[07:40:40:819490]:[Metadata] AssetAttributesManager.cpp(112)::AssetAttributesManager : Built default primitive asset templates : 12
+[07:40:40:819642]:[Metadata] SceneDatasetAttributesManager.cpp(37)::createObject : File (default) not found, so new default dataset attributes created  and registered.
+[07:40:40:819647]:[Metadata] MetadataMediator.cpp(120)::createSceneDataset : Dataset default successfully created.
+[07:40:40:819653]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Physics Manager>: Proposing JSON name : ./data/default.physics_config.json from original name : ./data/default.physics_config.json| This file does not exist.
+[07:40:40:819662]:[Metadata] PhysicsAttributesManager.cpp(26)::createObject : File (./data/default.physics_config.json) not found, so new default physics manager attributes created and registered.
+[07:40:40:819666]:[Metadata] MetadataMediator.cpp(210)::setActiveSceneDatasetName : Attempting to create new dataset ./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json
+[07:40:40:819672]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Dataset>: Proposing JSON name : ./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json from original name : ./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json| This file exists.
+[07:40:40:819746]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (capsule3DSolid:capsule3DSolid_hemiRings_4_cylRings_1_segments_12_halfLen_0.75_useTexCoords_false_useTangents_false) created and registered.
+[07:40:40:819754]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (capsule3DWireframe:capsule3DWireframe_hemiRings_8_cylRings_1_segments_16_halfLen_1) created and registered.
+[07:40:40:819762]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (coneSolid:coneSolid_segments_12_halfLen_1.25_rings_1_useTexCoords_false_useTangents_false_capEnd_true) created and registered.
+[07:40:40:819771]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (coneWireframe:coneWireframe_segments_32_halfLen_1.25) created and registered.
+[07:40:40:819778]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (cubeSolid:cubeSolid) created and registered.
+[07:40:40:819787]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (cubeWireframe:cubeWireframe) created and registered.
+[07:40:40:819796]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (cylinderSolid:cylinderSolid_rings_1_segments_12_halfLen_1_useTexCoords_false_useTangents_false_capEnds_true) created and registered.
+[07:40:40:819803]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (cylinderWireframe:cylinderWireframe_rings_1_segments_32_halfLen_1) created and registered.
+[07:40:40:819811]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (icosphereSolid:icosphereSolid_subdivs_1) created and registered.
+[07:40:40:819817]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (icosphereWireframe:icosphereWireframe_subdivs_1) created and registered.
+[07:40:40:819823]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (uvSphereSolid:uvSphereSolid_rings_8_segments_16_useTexCoords_false_useTangents_false) created and registered.
+[07:40:40:819830]:[Metadata] AssetAttributesManager.cpp(123)::createObject : Asset attributes (uvSphereWireframe:uvSphereWireframe_rings_16_segments_32) created and registered.
+[07:40:40:819834]:[Metadata] AssetAttributesManager.cpp(112)::AssetAttributesManager : Built default primitive asset templates : 12
+[07:40:40:819928]:[Metadata] SceneDatasetAttributesManager.cpp(310)::readDatasetJSONCell : "stages.default_attributes" set in Attributes Manager from JSON.
+[07:40:40:819940]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/example/00861-GLAQ4DNUx5U/*.basis.glb
+[07:40:40:819945]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/minival/00800-TEEsavR23oF/*.basis.glb
+[07:40:40:819948]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/minival/00802-wcojb4TFT35/*.basis.glb
+[07:40:40:819952]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/minival/00803-k1cupFYWXJ6/*.basis.glb
+[07:40:40:819956]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/minival/00808-y9hTuugGdiq/*.basis.glb
+[07:40:40:819960]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00900-XRJ2muKkwAV/*.basis.glb
+[07:40:40:819964]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00901-aJoC8Qw6xQ5/*.basis.glb
+[07:40:40:819967]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00904-S9CUp5RsFY9/*.basis.glb
+[07:40:40:819971]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00905-9v5HzFAB1cm/*.basis.glb
+[07:40:40:819975]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00907-WGxjrSp71zX/*.basis.glb
+[07:40:40:819978]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00909-MrKys1cv4jD/*.basis.glb
+[07:40:40:819982]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00910-jE7Qzu3FyJD/*.basis.glb
+[07:40:40:819990]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00911-a8h4mZT8buN/*.basis.glb
+[07:40:40:819994]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00913-URu5ybF8PrH/*.basis.glb
+[07:40:40:819998]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00914-TxyEAAVD4iD/*.basis.glb
+[07:40:40:820002]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00915-ieavb8rbmA9/*.basis.glb
+[07:40:40:820007]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00918-NQX2SZD1TMJ/*.basis.glb
+[07:40:40:820011]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00921-nhtTwUrWv7v/*.basis.glb
+[07:40:40:820014]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00925-4QUpJVDQ1DN/*.basis.glb
+[07:40:40:820020]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00926-egVUByjgpHU/*.basis.glb
+[07:40:40:820025]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00927-kucQY8TbKkz/*.basis.glb
+[07:40:40:820031]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00929-azb2LDaMrGZ/*.basis.glb
+[07:40:40:820037]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00939-VedHjk858Vu/*.basis.glb
+[07:40:40:820043]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00940-oHcTqmvveM7/*.basis.glb
+[07:40:40:820049]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00947-fyZC1Whhj9i/*.basis.glb
+[07:40:40:820055]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00951-RGvKsZAErEk/*.basis.glb
+[07:40:40:820060]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00952-ogAZhviACbN/*.basis.glb
+[07:40:40:820066]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00955-5TxBa2qkcAh/*.basis.glb
+[07:40:40:820072]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00956-oNiVkiFKkAr/*.basis.glb
+[07:40:40:820078]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00957-DowRMDn4MVe/*.basis.glb
+[07:40:40:820084]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00961-dU7KLdn2Kcd/*.basis.glb
+[07:40:40:820090]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00963-awRQoguC7TN/*.basis.glb
+[07:40:40:820096]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00967-XwXCfkthawu/*.basis.glb
+[07:40:40:820101]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00970-kUmc6DP2tff/*.basis.glb
+[07:40:40:820107]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00977-1cQ7WUQgXJ4/*.basis.glb
+[07:40:40:820112]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00978-sZJ5zo6FrEe/*.basis.glb
+[07:40:40:820117]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00981-Rp8JNfstaew/*.basis.glb
+[07:40:40:820123]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00985-3ZJjFFjJKqZ/*.basis.glb
+[07:40:40:820128]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00989-t9gvgFMoH4R/*.basis.glb
+[07:40:40:820135]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00992-G3AqUkGnykx/*.basis.glb
+[07:40:40:820140]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00006-HkseAnWCgqk/*.basis.glb
+[07:40:40:820146]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00009-vLpv2VX547B/*.basis.glb
+[07:40:40:820151]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00016-qk9eeNeR4vw/*.basis.glb
+[07:40:40:820156]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00017-oEPjPNSPmzL/*.basis.glb
+[07:40:40:820161]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00020-XYyR54sxe6b/*.basis.glb
+[07:40:40:820165]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00022-gmuS7Wgsbrx/*.basis.glb
+[07:40:40:820168]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00023-zepmXAdrpjR/*.basis.glb
+[07:40:40:820172]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00025-ixTj1aTMup2/*.basis.glb
+[07:40:40:820176]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00031-Wo6kuutE9i7/*.basis.glb
+[07:40:40:820179]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00033-oPj9qMxrDEa/*.basis.glb
+[07:40:40:820183]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00034-6imZUJGRUq4/*.basis.glb
+[07:40:40:820186]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00035-3XYAD64HpDr/*.basis.glb
+[07:40:40:820190]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00043-Jfyvj3xn2aJ/*.basis.glb
+[07:40:40:820193]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00055-HxmXPBbFCkH/*.basis.glb
+[07:40:40:820197]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00057-1UnKg1rAb8A/*.basis.glb
+[07:40:40:820201]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00059-kJxT5qssH4H/*.basis.glb
+[07:40:40:820204]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00062-ACZZiU6BXLz/*.basis.glb
+[07:40:40:820208]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00064-gQgtJ9Stk5s/*.basis.glb
+[07:40:40:820212]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00081-5biL7VEkByM/*.basis.glb
+[07:40:40:820215]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00087-YY8rqV6L6rf/*.basis.glb
+[07:40:40:820218]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00096-6HRFAUDqpTb/*.basis.glb
+[07:40:40:820222]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00099-226REUyJh2K/*.basis.glb
+[07:40:40:820225]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00105-xWvSkKiWQpC/*.basis.glb
+[07:40:40:820230]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00108-oStKKWkQ1id/*.basis.glb
+[07:40:40:820236]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00109-GTV2Y73Sn5t/*.basis.glb
+[07:40:40:820242]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00135-HeSYRw7eMtG/*.basis.glb
+[07:40:40:820247]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00141-iigzG1rtanx/*.basis.glb
+[07:40:40:820253]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00143-5Kw4nGdqYtS/*.basis.glb
+[07:40:40:820259]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00149-UuwwmrTsfBN/*.basis.glb
+[07:40:40:820264]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00150-LcAd9dhvVwh/*.basis.glb
+[07:40:40:820269]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00155-iLDo95ZbDJq/*.basis.glb
+[07:40:40:820272]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00164-XfUxBGTFQQb/*.basis.glb
+[07:40:40:820276]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00166-RaYrxWt5pR1/*.basis.glb
+[07:40:40:820281]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00168-bHKTDQFJxTw/*.basis.glb
+[07:40:40:820285]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00172-bB6nKqfsb1z/*.basis.glb
+[07:40:40:820291]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00173-qZ4B7U6XE5Y/*.basis.glb
+[07:40:40:820297]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00177-VSxVP19Cdyw/*.basis.glb
+[07:40:40:820302]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00179-MVVzj944atG/*.basis.glb
+[07:40:40:820308]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00188-dQrLTxHvLXU/*.basis.glb
+[07:40:40:820314]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00203-VoVGtfYrpuQ/*.basis.glb
+[07:40:40:820319]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00205-NEVASPhcrxR/*.basis.glb
+[07:40:40:820325]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00207-FRQ75PjD278/*.basis.glb
+[07:40:40:820330]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00210-j2EJhFEQGCL/*.basis.glb
+[07:40:40:820335]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00217-qz3829g1Lzf/*.basis.glb
+[07:40:40:820339]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00222-g8Xrdbe9fir/*.basis.glb
+[07:40:40:820344]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00234-nACV8wLu1u5/*.basis.glb
+[07:40:40:820348]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00238-j6fHrce9pHR/*.basis.glb
+[07:40:40:820353]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00241-h6nwVLpAKQz/*.basis.glb
+[07:40:40:820358]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00245-741Fdj7NLF9/*.basis.glb
+[07:40:40:820363]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00250-U3oQjwTuMX8/*.basis.glb
+[07:40:40:820367]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00251-wsAYBFtQaL7/*.basis.glb
+[07:40:40:820371]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00254-YMNvYDhK8mB/*.basis.glb
+[07:40:40:820376]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00255-NGyoyh91xXJ/*.basis.glb
+[07:40:40:820380]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00256-92vYG1q49FY/*.basis.glb
+[07:40:40:820384]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00258-2Pc8W48bu21/*.basis.glb
+[07:40:40:820388]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00261-fK2vEV32Lag/*.basis.glb
+[07:40:40:820394]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00262-1xGrZPxG1Hz/*.basis.glb
+[07:40:40:820399]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00263-GGBvSFddQgs/*.basis.glb
+[07:40:40:820403]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00267-gQ3xxshDiCz/*.basis.glb
+[07:40:40:820406]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00269-JNiWU5TZLtt/*.basis.glb
+[07:40:40:820410]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00272-kA2nG18hCAr/*.basis.glb
+[07:40:40:820416]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00294-PPTLa8SkUfo/*.basis.glb
+[07:40:40:820422]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00299-bdp1XNEdvmW/*.basis.glb
+[07:40:40:820428]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00304-X6Pct1msZv5/*.basis.glb
+[07:40:40:820433]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00307-vDfkYo5VqEQ/*.basis.glb
+[07:40:40:820439]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00313-PE6kVEtrxtj/*.basis.glb
+[07:40:40:820445]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00323-yHLr6bvWsVm/*.basis.glb
+[07:40:40:820451]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00324-DoSbsoo4EAg/*.basis.glb
+[07:40:40:820456]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00326-u9rPN5cHWBg/*.basis.glb
+[07:40:40:820462]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00327-xgLmjqzoAzF/*.basis.glb
+[07:40:40:820465]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00330-WhNyDTnd9g5/*.basis.glb
+[07:40:40:820471]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00366-fxbzYAGkrtm/*.basis.glb
+[07:40:40:820474]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00378-DqJKU7YU7dA/*.basis.glb
+[07:40:40:820478]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00382-S7uMvxjBVZq/*.basis.glb
+[07:40:40:820484]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00384-ceJTwFNjqCt/*.basis.glb
+[07:40:40:820487]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00386-b3WpMbPFB6q/*.basis.glb
+[07:40:40:820491]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00388-pcpn6mFqFCg/*.basis.glb
+[07:40:40:820494]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00397-ZNanfzgCdm3/*.basis.glb
+[07:40:40:820498]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00401-H8rQCnvBgo6/*.basis.glb
+[07:40:40:820502]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00404-QN2dRqwd84J/*.basis.glb
+[07:40:40:820505]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00407-NPHxDe6VeCc/*.basis.glb
+[07:40:40:820509]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00410-v7DzfFFEpsD/*.basis.glb
+[07:40:40:820512]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00414-77mMEyxhs44/*.basis.glb
+[07:40:40:820516]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00417-nGhNxKrgBPb/*.basis.glb
+[07:40:40:820519]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00422-8wJuSPJ9FXG/*.basis.glb
+[07:40:40:820523]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00434-L5QEsaVqwrY/*.basis.glb
+[07:40:40:820526]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00440-wPLokgvCnuk/*.basis.glb
+[07:40:40:820530]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00444-sX9xad6ULKc/*.basis.glb
+[07:40:40:820533]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00463-URjpCob8MGw/*.basis.glb
+[07:40:40:820537]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00466-xAHnY3QzFUN/*.basis.glb
+[07:40:40:820540]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00475-g7hUFVNac26/*.basis.glb
+[07:40:40:820544]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00476-NtnvZSMK3en/*.basis.glb
+[07:40:40:820547]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00487-erXNfWVjqZ8/*.basis.glb
+[07:40:40:820551]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00495-CQWES1bawee/*.basis.glb
+[07:40:40:820554]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00506-QVAA6zecMHu/*.basis.glb
+[07:40:40:820558]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00508-4vwGX7U38Ux/*.basis.glb
+[07:40:40:820561]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00525-iKFn6fzyRqs/*.basis.glb
+[07:40:40:820565]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00529-W9YAR9qcuvN/*.basis.glb
+[07:40:40:820568]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00534-DBBESbk4Y3k/*.basis.glb
+[07:40:40:820572]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00537-oahi4u45xMf/*.basis.glb
+[07:40:40:820575]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00538-3CBBjsNkhqW/*.basis.glb
+[07:40:40:820579]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00539-zUG6FL9TYeR/*.basis.glb
+[07:40:40:820583]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00541-FnDDfrBZPhh/*.basis.glb
+[07:40:40:820586]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00546-nS8T59Aw3sf/*.basis.glb
+[07:40:40:820590]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00547-9h5JJxM6E5S/*.basis.glb
+[07:40:40:820593]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00557-fRZhp6vWGw7/*.basis.glb
+[07:40:40:820597]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00560-gjhYih4upQ9/*.basis.glb
+[07:40:40:820601]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00567-KjZrPggnHm8/*.basis.glb
+[07:40:40:820604]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00569-YJDUB7hWg9h/*.basis.glb
+[07:40:40:820608]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00582-TYDavTf8oyy/*.basis.glb
+[07:40:40:820611]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00590-qgZhhx1MpTi/*.basis.glb
+[07:40:40:820615]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00591-JptJPosx1Z6/*.basis.glb
+[07:40:40:820618]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00592-CthA7sQNTPK/*.basis.glb
+[07:40:40:820622]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00598-mt9H8KcxRKD/*.basis.glb
+[07:40:40:820625]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00606-W16Bm4ysK8v/*.basis.glb
+[07:40:40:820629]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00612-GsQBY83r3hb/*.basis.glb
+[07:40:40:820633]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00619-R9fYpvCUkV7/*.basis.glb
+[07:40:40:820636]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00624-ooq3SnvC79d/*.basis.glb
+[07:40:40:820640]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00626-XiJhRLvpKpX/*.basis.glb
+[07:40:40:820643]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00638-iePHCSf119p/*.basis.glb
+[07:40:40:820647]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00643-ggNAcMh8JPT/*.basis.glb
+[07:40:40:820650]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00657-TSJmdttd2GV/*.basis.glb
+[07:40:40:820654]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00662-aRKASs4e8j1/*.basis.glb
+[07:40:40:820658]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00664-u5atqC7vRCY/*.basis.glb
+[07:40:40:820661]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00668-6YtDG3FhNvx/*.basis.glb
+[07:40:40:820665]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00669-DNWbUAJYsPy/*.basis.glb
+[07:40:40:820669]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00680-YmWinf3mhb5/*.basis.glb
+[07:40:40:820672]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00685-ENiCjXWB6aQ/*.basis.glb
+[07:40:40:820676]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00688-SgkmkWjjmDJ/*.basis.glb
+[07:40:40:820679]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00696-DsEJeNPcZtE/*.basis.glb
+[07:40:40:820683]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00706-YHmAkqgwe2p/*.basis.glb
+[07:40:40:820686]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00707-XVSZJAtHKdi/*.basis.glb
+[07:40:40:820690]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00712-HZ2iMMBsBQ9/*.basis.glb
+[07:40:40:820693]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00720-8B43pG641ff/*.basis.glb
+[07:40:40:820697]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00723-hWDDQnSDMXb/*.basis.glb
+[07:40:40:820701]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00732-Z2DQddYp1fn/*.basis.glb
+[07:40:40:820704]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00733-GtM3JtRvvvR/*.basis.glb
+[07:40:40:820708]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00738-GPyDUnjwZQy/*.basis.glb
+[07:40:40:820712]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00741-w8GiikYuFRk/*.basis.glb
+[07:40:40:820716]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00744-1S7LAXRdDqK/*.basis.glb
+[07:40:40:820719]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00745-yX5efd48dLf/*.basis.glb
+[07:40:40:820723]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00746-RTV2n6fXB2w/*.basis.glb
+[07:40:40:820726]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00750-E1NrAhMoqvB/*.basis.glb
+[07:40:40:820730]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00757-LVgQNuK8vtv/*.basis.glb
+[07:40:40:820733]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00758-HfMobPm86Xn/*.basis.glb
+[07:40:40:820755]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/*.basis.glb : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb
+[07:40:40:820762]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF
+[07:40:40:820767]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb| This file does not exist.
+[07:40:40:820785]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:820789]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:820798]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00802-wcojb4TFT35/*.basis.glb : ./data/scene_datasets/hm3d/val/00802-wcojb4TFT35/wcojb4TFT35.basis.glb
+[07:40:40:820804]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00802-wcojb4TFT35
+[07:40:40:820808]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00802-wcojb4TFT35/wcojb4TFT35.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00802-wcojb4TFT35/wcojb4TFT35.basis.glb| This file does not exist.
+[07:40:40:820827]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00802-wcojb4TFT35/wcojb4TFT35.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:820831]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:820843]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00803-k1cupFYWXJ6/*.basis.glb : ./data/scene_datasets/hm3d/val/00803-k1cupFYWXJ6/k1cupFYWXJ6.basis.glb
+[07:40:40:820850]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00803-k1cupFYWXJ6
+[07:40:40:820854]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00803-k1cupFYWXJ6/k1cupFYWXJ6.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00803-k1cupFYWXJ6/k1cupFYWXJ6.basis.glb| This file does not exist.
+[07:40:40:820869]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00803-k1cupFYWXJ6/k1cupFYWXJ6.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:820872]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:820881]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/*.basis.glb : ./data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.glb
+[07:40:40:820888]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00808-y9hTuugGdiq
+[07:40:40:820891]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.glb| This file does not exist.
+[07:40:40:820905]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:820909]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:820916]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00810-CrMo8WxCyVb/*.basis.glb : ./data/scene_datasets/hm3d/val/00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.glb
+[07:40:40:820925]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00810-CrMo8WxCyVb
+[07:40:40:820928]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.glb| This file does not exist.
+[07:40:40:820942]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:820945]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:820954]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00813-svBbv1Pavdk/*.basis.glb : ./data/scene_datasets/hm3d/val/00813-svBbv1Pavdk/svBbv1Pavdk.basis.glb
+[07:40:40:820961]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00813-svBbv1Pavdk
+[07:40:40:820964]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00813-svBbv1Pavdk/svBbv1Pavdk.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00813-svBbv1Pavdk/svBbv1Pavdk.basis.glb| This file does not exist.
+[07:40:40:820978]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00813-svBbv1Pavdk/svBbv1Pavdk.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:820981]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:820992]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00814-p53SfW6mjZe/*.basis.glb : ./data/scene_datasets/hm3d/val/00814-p53SfW6mjZe/p53SfW6mjZe.basis.glb
+[07:40:40:820998]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00814-p53SfW6mjZe
+[07:40:40:821001]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00814-p53SfW6mjZe/p53SfW6mjZe.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00814-p53SfW6mjZe/p53SfW6mjZe.basis.glb| This file does not exist.
+[07:40:40:821016]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00814-p53SfW6mjZe/p53SfW6mjZe.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821019]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821028]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00815-h1zeeAwLh9Z/*.basis.glb : ./data/scene_datasets/hm3d/val/00815-h1zeeAwLh9Z/h1zeeAwLh9Z.basis.glb
+[07:40:40:821035]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00815-h1zeeAwLh9Z
+[07:40:40:821038]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00815-h1zeeAwLh9Z/h1zeeAwLh9Z.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00815-h1zeeAwLh9Z/h1zeeAwLh9Z.basis.glb| This file does not exist.
+[07:40:40:821053]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00815-h1zeeAwLh9Z/h1zeeAwLh9Z.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821056]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821063]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00820-mL8ThkuaVTM/*.basis.glb : ./data/scene_datasets/hm3d/val/00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.glb
+[07:40:40:821071]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00820-mL8ThkuaVTM
+[07:40:40:821074]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.glb| This file does not exist.
+[07:40:40:821088]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821091]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821099]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00821-eF36g7L6Z9M/*.basis.glb : ./data/scene_datasets/hm3d/val/00821-eF36g7L6Z9M/eF36g7L6Z9M.basis.glb
+[07:40:40:821104]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00821-eF36g7L6Z9M
+[07:40:40:821109]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00821-eF36g7L6Z9M/eF36g7L6Z9M.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00821-eF36g7L6Z9M/eF36g7L6Z9M.basis.glb| This file does not exist.
+[07:40:40:821123]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00821-eF36g7L6Z9M/eF36g7L6Z9M.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821126]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821134]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/*.basis.glb : ./data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb
+[07:40:40:821139]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ
+[07:40:40:821142]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb| This file does not exist.
+[07:40:40:821153]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821156]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821164]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/*.basis.glb : ./data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb
+[07:40:40:821169]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi
+[07:40:40:821172]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb| This file does not exist.
+[07:40:40:821185]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821188]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821195]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/*.basis.glb : ./data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb
+[07:40:40:821200]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ
+[07:40:40:821204]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb| This file does not exist.
+[07:40:40:821216]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821219]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821226]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/*.basis.glb : ./data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb
+[07:40:40:821232]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs
+[07:40:40:821235]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb| This file does not exist.
+[07:40:40:821246]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821249]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821257]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/*.basis.glb : ./data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb
+[07:40:40:821262]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00831-yr17PDCnDDW
+[07:40:40:821265]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb| This file does not exist.
+[07:40:40:821276]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821280]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821287]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/*.basis.glb : ./data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb
+[07:40:40:821292]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk
+[07:40:40:821295]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb| This file does not exist.
+[07:40:40:821306]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821309]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821317]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/*.basis.glb : ./data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb
+[07:40:40:821322]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s
+[07:40:40:821326]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb| This file does not exist.
+[07:40:40:821338]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821341]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821349]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00839-zt1RVoi7PcG/*.basis.glb : ./data/scene_datasets/hm3d/val/00839-zt1RVoi7PcG/zt1RVoi7PcG.basis.glb
+[07:40:40:821354]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00839-zt1RVoi7PcG
+[07:40:40:821357]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00839-zt1RVoi7PcG/zt1RVoi7PcG.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00839-zt1RVoi7PcG/zt1RVoi7PcG.basis.glb| This file does not exist.
+[07:40:40:821368]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00839-zt1RVoi7PcG/zt1RVoi7PcG.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821371]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821378]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00843-DYehNKdT76V/*.basis.glb : ./data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb
+[07:40:40:821383]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00843-DYehNKdT76V
+[07:40:40:821386]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb| This file does not exist.
+[07:40:40:821398]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821401]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821408]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00844-q5QZSEeHe5g/*.basis.glb : ./data/scene_datasets/hm3d/val/00844-q5QZSEeHe5g/q5QZSEeHe5g.basis.glb
+[07:40:40:821414]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00844-q5QZSEeHe5g
+[07:40:40:821417]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00844-q5QZSEeHe5g/q5QZSEeHe5g.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00844-q5QZSEeHe5g/q5QZSEeHe5g.basis.glb| This file does not exist.
+[07:40:40:821428]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00844-q5QZSEeHe5g/q5QZSEeHe5g.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821431]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821438]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/*.basis.glb : ./data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb
+[07:40:40:821443]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00847-bCPU9suPUw9
+[07:40:40:821447]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb| This file does not exist.
+[07:40:40:821458]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821461]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821468]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00848-ziup5kvtCCR/*.basis.glb : ./data/scene_datasets/hm3d/val/00848-ziup5kvtCCR/ziup5kvtCCR.basis.glb
+[07:40:40:821473]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00848-ziup5kvtCCR
+[07:40:40:821477]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00848-ziup5kvtCCR/ziup5kvtCCR.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00848-ziup5kvtCCR/ziup5kvtCCR.basis.glb| This file does not exist.
+[07:40:40:821489]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00848-ziup5kvtCCR/ziup5kvtCCR.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821492]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821499]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/*.basis.glb : ./data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.glb
+[07:40:40:821504]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV
+[07:40:40:821507]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.glb| This file does not exist.
+[07:40:40:821524]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821527]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821535]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00853-5cdEh9F2hJL/*.basis.glb : ./data/scene_datasets/hm3d/val/00853-5cdEh9F2hJL/5cdEh9F2hJL.basis.glb
+[07:40:40:821542]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00853-5cdEh9F2hJL
+[07:40:40:821545]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00853-5cdEh9F2hJL/5cdEh9F2hJL.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00853-5cdEh9F2hJL/5cdEh9F2hJL.basis.glb| This file does not exist.
+[07:40:40:821558]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00853-5cdEh9F2hJL/5cdEh9F2hJL.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821561]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821571]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00861-GLAQ4DNUx5U/*.basis.glb : ./data/scene_datasets/hm3d/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb
+[07:40:40:821577]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00861-GLAQ4DNUx5U
+[07:40:40:821580]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb| This file does not exist.
+[07:40:40:821591]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821594]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821602]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/*.basis.glb : ./data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.glb
+[07:40:40:821606]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea
+[07:40:40:821609]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.glb| This file does not exist.
+[07:40:40:821621]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821624]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821631]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/*.basis.glb : ./data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.glb
+[07:40:40:821636]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00869-MHPLjHsuG27
+[07:40:40:821639]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.glb| This file does not exist.
+[07:40:40:821652]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821655]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821662]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/*.basis.glb : ./data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.glb
+[07:40:40:821667]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS
+[07:40:40:821670]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.glb| This file does not exist.
+[07:40:40:821682]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821685]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821692]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00873-bxsVRursffK/*.basis.glb : ./data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.glb
+[07:40:40:821697]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00873-bxsVRursffK
+[07:40:40:821700]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.glb| This file does not exist.
+[07:40:40:821712]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821715]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821722]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00876-mv2HUxq3B53/*.basis.glb : ./data/scene_datasets/hm3d/val/00876-mv2HUxq3B53/mv2HUxq3B53.basis.glb
+[07:40:40:821727]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00876-mv2HUxq3B53
+[07:40:40:821730]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00876-mv2HUxq3B53/mv2HUxq3B53.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00876-mv2HUxq3B53/mv2HUxq3B53.basis.glb| This file does not exist.
+[07:40:40:821742]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00876-mv2HUxq3B53/mv2HUxq3B53.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821745]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821752]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00877-4ok3usBNeis/*.basis.glb : ./data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb
+[07:40:40:821757]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00877-4ok3usBNeis
+[07:40:40:821760]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb| This file does not exist.
+[07:40:40:821771]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821774]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821782]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/*.basis.glb : ./data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.glb
+[07:40:40:821787]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE
+[07:40:40:821790]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.glb| This file does not exist.
+[07:40:40:821802]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821807]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821814]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/*.basis.glb : ./data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb
+[07:40:40:821819]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo
+[07:40:40:821822]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb| This file does not exist.
+[07:40:40:821833]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821836]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821844]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00890-6s7QHgap2fW/*.basis.glb : ./data/scene_datasets/hm3d/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb
+[07:40:40:821849]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00890-6s7QHgap2fW
+[07:40:40:821852]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb| This file does not exist.
+[07:40:40:821863]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821866]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821873]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/*.basis.glb : ./data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.glb
+[07:40:40:821878]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5
+[07:40:40:821881]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.glb| This file does not exist.
+[07:40:40:821893]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821896]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821903]:[Metadata] AttributesManagerBase.h(352)::buildAttrSrcPathsFromJSONAndLoad : Glob path result for ./data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/*.basis.glb : ./data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb
+[07:40:40:821909]:[Metadata] AttributesManagerBase.h(265)::loadAllFileBasedTemplates : Loading 1  Stage Template templates found in ./data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n
+[07:40:40:821912]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Stage Template>: Proposing JSON name : ./data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.stage_config.json from original name : ./data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb| This file does not exist.
+[07:40:40:821923]:[Metadata] AbstractObjectAttributesManagerBase.h(184)::createObject : File (./data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb) exists but is not a recognized config filename extension, so new default Stage Template attributes created and registered.
+[07:40:40:821926]:[Metadata] AttributesManagerBase.h(285)::loadAllFileBasedTemplates : <Stage Template> : Loaded file-based templates: 1
+[07:40:40:821929]:[Metadata] AttributesManagerBase.h(360)::buildAttrSrcPathsFromJSONAndLoad : <Stage Template>:221paths specified in JSON doc forStage Templatetemplates.
+[07:40:40:821938]:[Metadata] SceneInstanceAttributesManager.cpp(67)::setValsFromJSONDoc : No Stage specified for scene default_attributes , or specification error.
+[07:40:40:821942]:[Metadata] SceneInstanceAttributesManager.cpp(107)::setValsFromJSONDoc : No Articulated Objects specified for scene default_attributes , or specification error.
+[07:40:40:821946]:[Metadata] SceneInstanceAttributesManager.cpp(127)::setValsFromJSONDoc : No navmesh_instance specified for scene default_attributes .
+[07:40:40:821949]:[Metadata] SceneInstanceAttributesManager.cpp(137)::setValsFromJSONDoc : No semantic_scene_instance specified for scene default_attributes .
+[07:40:40:821952]:[Metadata] SceneDatasetAttributesManager.cpp(310)::readDatasetJSONCell : "scene_instances.default_attributes" set in Attributes Manager from JSON.
+[07:40:40:821957]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/example/00861-GLAQ4DNUx5U/*.basis.scene_instance.json
+[07:40:40:821961]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/minival/00800-TEEsavR23oF/*.basis.scene_instance.json
+[07:40:40:821965]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/minival/00802-wcojb4TFT35/*.basis.scene_instance.json
+[07:40:40:821969]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/minival/00803-k1cupFYWXJ6/*.basis.scene_instance.json
+[07:40:40:821972]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/minival/00808-y9hTuugGdiq/*.basis.scene_instance.json
+[07:40:40:821976]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00900-XRJ2muKkwAV/*.basis.scene_instance.json
+[07:40:40:821980]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00901-aJoC8Qw6xQ5/*.basis.scene_instance.json
+[07:40:40:821983]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00904-S9CUp5RsFY9/*.basis.scene_instance.json
+[07:40:40:821989]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00905-9v5HzFAB1cm/*.basis.scene_instance.json
+[07:40:40:821993]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00907-WGxjrSp71zX/*.basis.scene_instance.json
+[07:40:40:821996]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00909-MrKys1cv4jD/*.basis.scene_instance.json
+[07:40:40:822000]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00910-jE7Qzu3FyJD/*.basis.scene_instance.json
+[07:40:40:822004]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00911-a8h4mZT8buN/*.basis.scene_instance.json
+[07:40:40:822008]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00913-URu5ybF8PrH/*.basis.scene_instance.json
+[07:40:40:822011]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00914-TxyEAAVD4iD/*.basis.scene_instance.json
+[07:40:40:822014]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00915-ieavb8rbmA9/*.basis.scene_instance.json
+[07:40:40:822018]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00918-NQX2SZD1TMJ/*.basis.scene_instance.json
+[07:40:40:822021]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00921-nhtTwUrWv7v/*.basis.scene_instance.json
+[07:40:40:822025]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00925-4QUpJVDQ1DN/*.basis.scene_instance.json
+[07:40:40:822029]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00926-egVUByjgpHU/*.basis.scene_instance.json
+[07:40:40:822032]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00927-kucQY8TbKkz/*.basis.scene_instance.json
+[07:40:40:822036]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00929-azb2LDaMrGZ/*.basis.scene_instance.json
+[07:40:40:822040]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00939-VedHjk858Vu/*.basis.scene_instance.json
+[07:40:40:822043]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00940-oHcTqmvveM7/*.basis.scene_instance.json
+[07:40:40:822047]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00947-fyZC1Whhj9i/*.basis.scene_instance.json
+[07:40:40:822051]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00951-RGvKsZAErEk/*.basis.scene_instance.json
+[07:40:40:822054]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00952-ogAZhviACbN/*.basis.scene_instance.json
+[07:40:40:822058]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00955-5TxBa2qkcAh/*.basis.scene_instance.json
+[07:40:40:822062]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00956-oNiVkiFKkAr/*.basis.scene_instance.json
+[07:40:40:822065]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00957-DowRMDn4MVe/*.basis.scene_instance.json
+[07:40:40:822069]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00961-dU7KLdn2Kcd/*.basis.scene_instance.json
+[07:40:40:822073]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00963-awRQoguC7TN/*.basis.scene_instance.json
+[07:40:40:822076]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00967-XwXCfkthawu/*.basis.scene_instance.json
+[07:40:40:822080]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00970-kUmc6DP2tff/*.basis.scene_instance.json
+[07:40:40:822084]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00977-1cQ7WUQgXJ4/*.basis.scene_instance.json
+[07:40:40:822087]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00978-sZJ5zo6FrEe/*.basis.scene_instance.json
+[07:40:40:822091]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00981-Rp8JNfstaew/*.basis.scene_instance.json
+[07:40:40:822094]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00985-3ZJjFFjJKqZ/*.basis.scene_instance.json
+[07:40:40:822098]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00989-t9gvgFMoH4R/*.basis.scene_instance.json
+[07:40:40:822102]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/test/00992-G3AqUkGnykx/*.basis.scene_instance.json
+[07:40:40:822106]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00006-HkseAnWCgqk/*.basis.scene_instance.json
+[07:40:40:822109]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00009-vLpv2VX547B/*.basis.scene_instance.json
+[07:40:40:822113]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00016-qk9eeNeR4vw/*.basis.scene_instance.json
+[07:40:40:822116]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00017-oEPjPNSPmzL/*.basis.scene_instance.json
+[07:40:40:822120]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00020-XYyR54sxe6b/*.basis.scene_instance.json
+[07:40:40:822123]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00022-gmuS7Wgsbrx/*.basis.scene_instance.json
+[07:40:40:822127]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00023-zepmXAdrpjR/*.basis.scene_instance.json
+[07:40:40:822131]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00025-ixTj1aTMup2/*.basis.scene_instance.json
+[07:40:40:822135]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00031-Wo6kuutE9i7/*.basis.scene_instance.json
+[07:40:40:822138]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00033-oPj9qMxrDEa/*.basis.scene_instance.json
+[07:40:40:822142]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00034-6imZUJGRUq4/*.basis.scene_instance.json
+[07:40:40:822146]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00035-3XYAD64HpDr/*.basis.scene_instance.json
+[07:40:40:822149]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00043-Jfyvj3xn2aJ/*.basis.scene_instance.json
+[07:40:40:822153]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00055-HxmXPBbFCkH/*.basis.scene_instance.json
+[07:40:40:822156]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00057-1UnKg1rAb8A/*.basis.scene_instance.json
+[07:40:40:822160]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00059-kJxT5qssH4H/*.basis.scene_instance.json
+[07:40:40:822163]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00062-ACZZiU6BXLz/*.basis.scene_instance.json
+[07:40:40:822167]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00064-gQgtJ9Stk5s/*.basis.scene_instance.json
+[07:40:40:822170]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00081-5biL7VEkByM/*.basis.scene_instance.json
+[07:40:40:822174]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00087-YY8rqV6L6rf/*.basis.scene_instance.json
+[07:40:40:822178]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00096-6HRFAUDqpTb/*.basis.scene_instance.json
+[07:40:40:822181]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00099-226REUyJh2K/*.basis.scene_instance.json
+[07:40:40:822185]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00105-xWvSkKiWQpC/*.basis.scene_instance.json
+[07:40:40:822188]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00108-oStKKWkQ1id/*.basis.scene_instance.json
+[07:40:40:822192]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00109-GTV2Y73Sn5t/*.basis.scene_instance.json
+[07:40:40:822196]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00135-HeSYRw7eMtG/*.basis.scene_instance.json
+[07:40:40:822199]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00141-iigzG1rtanx/*.basis.scene_instance.json
+[07:40:40:822203]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00143-5Kw4nGdqYtS/*.basis.scene_instance.json
+[07:40:40:822207]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00149-UuwwmrTsfBN/*.basis.scene_instance.json
+[07:40:40:822210]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00150-LcAd9dhvVwh/*.basis.scene_instance.json
+[07:40:40:822214]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00155-iLDo95ZbDJq/*.basis.scene_instance.json
+[07:40:40:822218]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00164-XfUxBGTFQQb/*.basis.scene_instance.json
+[07:40:40:822222]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00166-RaYrxWt5pR1/*.basis.scene_instance.json
+[07:40:40:822225]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00168-bHKTDQFJxTw/*.basis.scene_instance.json
+[07:40:40:822229]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00172-bB6nKqfsb1z/*.basis.scene_instance.json
+[07:40:40:822234]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00173-qZ4B7U6XE5Y/*.basis.scene_instance.json
+[07:40:40:822239]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00177-VSxVP19Cdyw/*.basis.scene_instance.json
+[07:40:40:822246]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00179-MVVzj944atG/*.basis.scene_instance.json
+[07:40:40:822251]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00188-dQrLTxHvLXU/*.basis.scene_instance.json
+[07:40:40:822255]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00203-VoVGtfYrpuQ/*.basis.scene_instance.json
+[07:40:40:822259]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00205-NEVASPhcrxR/*.basis.scene_instance.json
+[07:40:40:822262]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00207-FRQ75PjD278/*.basis.scene_instance.json
+[07:40:40:822268]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00210-j2EJhFEQGCL/*.basis.scene_instance.json
+[07:40:40:822274]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00217-qz3829g1Lzf/*.basis.scene_instance.json
+[07:40:40:822280]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00222-g8Xrdbe9fir/*.basis.scene_instance.json
+[07:40:40:822285]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00234-nACV8wLu1u5/*.basis.scene_instance.json
+[07:40:40:822290]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00238-j6fHrce9pHR/*.basis.scene_instance.json
+[07:40:40:822294]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00241-h6nwVLpAKQz/*.basis.scene_instance.json
+[07:40:40:822300]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00245-741Fdj7NLF9/*.basis.scene_instance.json
+[07:40:40:822304]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00250-U3oQjwTuMX8/*.basis.scene_instance.json
+[07:40:40:822310]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00251-wsAYBFtQaL7/*.basis.scene_instance.json
+[07:40:40:822316]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00254-YMNvYDhK8mB/*.basis.scene_instance.json
+[07:40:40:822321]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00255-NGyoyh91xXJ/*.basis.scene_instance.json
+[07:40:40:822326]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00256-92vYG1q49FY/*.basis.scene_instance.json
+[07:40:40:822330]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00258-2Pc8W48bu21/*.basis.scene_instance.json
+[07:40:40:822335]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00261-fK2vEV32Lag/*.basis.scene_instance.json
+[07:40:40:822341]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00262-1xGrZPxG1Hz/*.basis.scene_instance.json
+[07:40:40:822347]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00263-GGBvSFddQgs/*.basis.scene_instance.json
+[07:40:40:822352]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00267-gQ3xxshDiCz/*.basis.scene_instance.json
+[07:40:40:822358]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00269-JNiWU5TZLtt/*.basis.scene_instance.json
+[07:40:40:822363]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00272-kA2nG18hCAr/*.basis.scene_instance.json
+[07:40:40:822369]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00294-PPTLa8SkUfo/*.basis.scene_instance.json
+[07:40:40:822374]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00299-bdp1XNEdvmW/*.basis.scene_instance.json
+[07:40:40:822379]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00304-X6Pct1msZv5/*.basis.scene_instance.json
+[07:40:40:822385]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00307-vDfkYo5VqEQ/*.basis.scene_instance.json
+[07:40:40:822390]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00313-PE6kVEtrxtj/*.basis.scene_instance.json
+[07:40:40:822395]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00323-yHLr6bvWsVm/*.basis.scene_instance.json
+[07:40:40:822401]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00324-DoSbsoo4EAg/*.basis.scene_instance.json
+[07:40:40:822406]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00326-u9rPN5cHWBg/*.basis.scene_instance.json
+[07:40:40:822412]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00327-xgLmjqzoAzF/*.basis.scene_instance.json
+[07:40:40:822417]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00330-WhNyDTnd9g5/*.basis.scene_instance.json
+[07:40:40:822422]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00366-fxbzYAGkrtm/*.basis.scene_instance.json
+[07:40:40:822427]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00378-DqJKU7YU7dA/*.basis.scene_instance.json
+[07:40:40:822432]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00382-S7uMvxjBVZq/*.basis.scene_instance.json
+[07:40:40:822437]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00384-ceJTwFNjqCt/*.basis.scene_instance.json
+[07:40:40:822442]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00386-b3WpMbPFB6q/*.basis.scene_instance.json
+[07:40:40:822447]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00388-pcpn6mFqFCg/*.basis.scene_instance.json
+[07:40:40:822453]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00397-ZNanfzgCdm3/*.basis.scene_instance.json
+[07:40:40:822459]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00401-H8rQCnvBgo6/*.basis.scene_instance.json
+[07:40:40:822464]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00404-QN2dRqwd84J/*.basis.scene_instance.json
+[07:40:40:822469]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00407-NPHxDe6VeCc/*.basis.scene_instance.json
+[07:40:40:822474]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00410-v7DzfFFEpsD/*.basis.scene_instance.json
+[07:40:40:822479]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00414-77mMEyxhs44/*.basis.scene_instance.json
+[07:40:40:822485]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00417-nGhNxKrgBPb/*.basis.scene_instance.json
+[07:40:40:822490]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00422-8wJuSPJ9FXG/*.basis.scene_instance.json
+[07:40:40:822494]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00434-L5QEsaVqwrY/*.basis.scene_instance.json
+[07:40:40:822500]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00440-wPLokgvCnuk/*.basis.scene_instance.json
+[07:40:40:822504]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00444-sX9xad6ULKc/*.basis.scene_instance.json
+[07:40:40:822507]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00463-URjpCob8MGw/*.basis.scene_instance.json
+[07:40:40:822511]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00466-xAHnY3QzFUN/*.basis.scene_instance.json
+[07:40:40:822515]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00475-g7hUFVNac26/*.basis.scene_instance.json
+[07:40:40:822519]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00476-NtnvZSMK3en/*.basis.scene_instance.json
+[07:40:40:822524]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00487-erXNfWVjqZ8/*.basis.scene_instance.json
+[07:40:40:822528]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00495-CQWES1bawee/*.basis.scene_instance.json
+[07:40:40:822532]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00506-QVAA6zecMHu/*.basis.scene_instance.json
+[07:40:40:822535]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00508-4vwGX7U38Ux/*.basis.scene_instance.json
+[07:40:40:822539]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00525-iKFn6fzyRqs/*.basis.scene_instance.json
+[07:40:40:822544]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00529-W9YAR9qcuvN/*.basis.scene_instance.json
+[07:40:40:822548]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00534-DBBESbk4Y3k/*.basis.scene_instance.json
+[07:40:40:822552]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00537-oahi4u45xMf/*.basis.scene_instance.json
+[07:40:40:822555]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00538-3CBBjsNkhqW/*.basis.scene_instance.json
+[07:40:40:822559]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00539-zUG6FL9TYeR/*.basis.scene_instance.json
+[07:40:40:822562]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00541-FnDDfrBZPhh/*.basis.scene_instance.json
+[07:40:40:822568]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00546-nS8T59Aw3sf/*.basis.scene_instance.json
+[07:40:40:822574]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00547-9h5JJxM6E5S/*.basis.scene_instance.json
+[07:40:40:822579]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00557-fRZhp6vWGw7/*.basis.scene_instance.json
+[07:40:40:822584]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00560-gjhYih4upQ9/*.basis.scene_instance.json
+[07:40:40:822590]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00567-KjZrPggnHm8/*.basis.scene_instance.json
+[07:40:40:822595]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00569-YJDUB7hWg9h/*.basis.scene_instance.json
+[07:40:40:822598]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00582-TYDavTf8oyy/*.basis.scene_instance.json
+[07:40:40:822602]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00590-qgZhhx1MpTi/*.basis.scene_instance.json
+[07:40:40:822608]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00591-JptJPosx1Z6/*.basis.scene_instance.json
+[07:40:40:822613]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00592-CthA7sQNTPK/*.basis.scene_instance.json
+[07:40:40:822618]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00598-mt9H8KcxRKD/*.basis.scene_instance.json
+[07:40:40:822623]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00606-W16Bm4ysK8v/*.basis.scene_instance.json
+[07:40:40:822628]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00612-GsQBY83r3hb/*.basis.scene_instance.json
+[07:40:40:822631]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00619-R9fYpvCUkV7/*.basis.scene_instance.json
+[07:40:40:822635]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00624-ooq3SnvC79d/*.basis.scene_instance.json
+[07:40:40:822638]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00626-XiJhRLvpKpX/*.basis.scene_instance.json
+[07:40:40:822642]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00638-iePHCSf119p/*.basis.scene_instance.json
+[07:40:40:822648]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00643-ggNAcMh8JPT/*.basis.scene_instance.json
+[07:40:40:822654]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00657-TSJmdttd2GV/*.basis.scene_instance.json
+[07:40:40:822658]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00662-aRKASs4e8j1/*.basis.scene_instance.json
+[07:40:40:822661]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00664-u5atqC7vRCY/*.basis.scene_instance.json
+[07:40:40:822665]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00668-6YtDG3FhNvx/*.basis.scene_instance.json
+[07:40:40:822668]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00669-DNWbUAJYsPy/*.basis.scene_instance.json
+[07:40:40:822672]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00680-YmWinf3mhb5/*.basis.scene_instance.json
+[07:40:40:822675]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00685-ENiCjXWB6aQ/*.basis.scene_instance.json
+[07:40:40:822679]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00688-SgkmkWjjmDJ/*.basis.scene_instance.json
+[07:40:40:822683]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00696-DsEJeNPcZtE/*.basis.scene_instance.json
+[07:40:40:822688]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00706-YHmAkqgwe2p/*.basis.scene_instance.json
+[07:40:40:822691]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00707-XVSZJAtHKdi/*.basis.scene_instance.json
+[07:40:40:822694]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00712-HZ2iMMBsBQ9/*.basis.scene_instance.json
+[07:40:40:822698]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00720-8B43pG641ff/*.basis.scene_instance.json
+[07:40:40:822701]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00723-hWDDQnSDMXb/*.basis.scene_instance.json
+[07:40:40:822706]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00732-Z2DQddYp1fn/*.basis.scene_instance.json
+[07:40:40:822710]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00733-GtM3JtRvvvR/*.basis.scene_instance.json
+[07:40:40:822714]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00738-GPyDUnjwZQy/*.basis.scene_instance.json
+[07:40:40:822717]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00741-w8GiikYuFRk/*.basis.scene_instance.json
+[07:40:40:822720]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00744-1S7LAXRdDqK/*.basis.scene_instance.json
+[07:40:40:822725]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00745-yX5efd48dLf/*.basis.scene_instance.json
+[07:40:40:822730]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00746-RTV2n6fXB2w/*.basis.scene_instance.json
+[07:40:40:822736]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00750-E1NrAhMoqvB/*.basis.scene_instance.json
+[07:40:40:822740]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00757-LVgQNuK8vtv/*.basis.scene_instance.json
+[07:40:40:822744]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/train/00758-HfMobPm86Xn/*.basis.scene_instance.json
+[07:40:40:822753]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/*.basis.scene_instance.json
+[07:40:40:822761]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00802-wcojb4TFT35/*.basis.scene_instance.json
+[07:40:40:822771]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00803-k1cupFYWXJ6/*.basis.scene_instance.json
+[07:40:40:822780]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/*.basis.scene_instance.json
+[07:40:40:822787]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00810-CrMo8WxCyVb/*.basis.scene_instance.json
+[07:40:40:822793]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00813-svBbv1Pavdk/*.basis.scene_instance.json
+[07:40:40:822800]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00814-p53SfW6mjZe/*.basis.scene_instance.json
+[07:40:40:822809]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00815-h1zeeAwLh9Z/*.basis.scene_instance.json
+[07:40:40:822818]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00820-mL8ThkuaVTM/*.basis.scene_instance.json
+[07:40:40:822825]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00821-eF36g7L6Z9M/*.basis.scene_instance.json
+[07:40:40:822832]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/*.basis.scene_instance.json
+[07:40:40:822838]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/*.basis.scene_instance.json
+[07:40:40:822847]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/*.basis.scene_instance.json
+[07:40:40:822856]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/*.basis.scene_instance.json
+[07:40:40:822863]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/*.basis.scene_instance.json
+[07:40:40:822869]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/*.basis.scene_instance.json
+[07:40:40:822876]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/*.basis.scene_instance.json
+[07:40:40:822882]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00839-zt1RVoi7PcG/*.basis.scene_instance.json
+[07:40:40:822891]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00843-DYehNKdT76V/*.basis.scene_instance.json
+[07:40:40:822901]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00844-q5QZSEeHe5g/*.basis.scene_instance.json
+[07:40:40:822907]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/*.basis.scene_instance.json
+[07:40:40:822914]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00848-ziup5kvtCCR/*.basis.scene_instance.json
+[07:40:40:822920]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/*.basis.scene_instance.json
+[07:40:40:822930]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00853-5cdEh9F2hJL/*.basis.scene_instance.json
+[07:40:40:822939]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00861-GLAQ4DNUx5U/*.basis.scene_instance.json
+[07:40:40:822946]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/*.basis.scene_instance.json
+[07:40:40:822952]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/*.basis.scene_instance.json
+[07:40:40:822958]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/*.basis.scene_instance.json
+[07:40:40:822967]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00873-bxsVRursffK/*.basis.scene_instance.json
+[07:40:40:822976]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00876-mv2HUxq3B53/*.basis.scene_instance.json
+[07:40:40:822982]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00877-4ok3usBNeis/*.basis.scene_instance.json
+[07:40:40:822991]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/*.basis.scene_instance.json
+[07:40:40:822998]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/*.basis.scene_instance.json
+[07:40:40:823006]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00890-6s7QHgap2fW/*.basis.scene_instance.json
+[07:40:40:823013]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/*.basis.scene_instance.json
+[07:40:40:823019]:[Metadata] AttributesManagerBase.h(357)::buildAttrSrcPathsFromJSONAndLoad : No Glob path result for ./data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/*.basis.scene_instance.json
+[07:40:40:823022]:[Metadata] AttributesManagerBase.h(360)::buildAttrSrcPathsFromJSONAndLoad : <Scene Instance>:221paths specified in JSON doc forScene Instancetemplates.
+[07:40:40:823031]:[Metadata] SceneDatasetAttributesManager.cpp(37)::createObject : JSON Configuration File (./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json) based dataset attributes created  and registered.
+[07:40:40:823034]:[Metadata] MetadataMediator.cpp(120)::createSceneDataset : Dataset ./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json successfully created.
+[07:40:40:823038]:[Metadata] MetadataMediator.cpp(217)::setActiveSceneDatasetName : Attempt to create new dataset ./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json   succeeded. Currently active dataset : ./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json
+[07:40:40:823043]:[Metadata] MetadataMediator.cpp(175)::setCurrPhysicsAttributesHandle : Old physics manager attributes  changed to ./data/default.physics_config.json successfully.
+[07:40:40:823049]:[Metadata] MetadataMediator.cpp(66)::setSimulatorConfiguration : Set new simulator config for scene/stage : data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb and dataset : ./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json which is currently active dataset.
+Renderer: NVIDIA GeForce RTX 5060 Ti/PCIe/SSE2 by NVIDIA Corporation
+OpenGL version: 4.6.0 NVIDIA 590.48.01
+Using optional features:
+    GL_ARB_vertex_array_object
+    GL_ARB_separate_shader_objects
+    GL_ARB_robustness
+    GL_ARB_texture_storage
+    GL_ARB_texture_view
+    GL_ARB_framebuffer_no_attachments
+    GL_ARB_invalidate_subdata
+    GL_ARB_texture_storage_multisample
+    GL_ARB_multi_bind
+    GL_ARB_direct_state_access
+    GL_ARB_get_texture_sub_image
+    GL_ARB_texture_filter_anisotropic
+    GL_KHR_debug
+    GL_KHR_parallel_shader_compile
+    GL_NV_depth_buffer_float
+Using driver workarounds:
+    no-forward-compatible-core-context
+    nv-egl-incorrect-gl11-function-pointers
+    no-layout-qualifiers-on-old-glsl
+    nv-zero-context-profile-mask
+    nv-implementation-color-read-format-dsa-broken
+    nv-cubemap-inconsistent-compressed-image-size
+    nv-cubemap-broken-full-compressed-image-query
+    nv-compressed-block-size-in-bits
+[07:40:40:891010]:[Metadata] MetadataMediator.cpp(279)::getSceneInstanceAttributesByName : No existing scene instance attributes containing name data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb found in Dataset : ./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json but 1 StageAttributes found.  Using ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb as stage and to construct a SceneInstanceAttributes with same name that will be added to Dataset.
+[07:40:40:891051]:[Metadata] SceneDatasetAttributes.cpp(47)::addNewSceneInstanceToDataset : Dataset : 'hm3d_annotated_basis' : Stage Attributes './data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb' specified in Scene Attributes exists in dataset library.
+[07:40:40:891054]:[Metadata] SceneDatasetAttributes.cpp(84)::addNewSceneInstanceToDataset : Dataset : 'hm3d_annotated_basis' : Lighting Layout Attributes 'no_lights' specified in Scene Attributes but does not exist in dataset, so creating.
+[07:40:40:891059]:[Metadata] AttributesManagerBase.h(380)::createFromJsonOrDefaultInternal : <Lighting Layout>: Proposing JSON name : no_lights.lighting_config.json from original name : no_lights| This file does not exist.
+[07:40:40:891067]:[Metadata] LightLayoutAttributesManager.cpp(38)::createObject : File (no_lights) not found, so new default light layout attributes created and registered.
+[07:40:40:891072]:[Sim] Simulator.cpp(235)::createSceneInstance : Navmesh file location in scene instance : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.navmesh
+[07:40:40:891079]:[Sim] Simulator.cpp(240)::createSceneInstance : Loading navmesh from ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.navmesh
+[07:40:40:891131]:[Sim] Simulator.cpp(242)::createSceneInstance : Navmesh Loaded.
+[07:40:40:891140]:[Scene] SceneGraph.h(85)::createDrawableGroup : Created DrawableGroup: 
+[07:40:40:891144]:[Assets] ResourceManager.cpp(308)::loadSemanticSceneDescriptor : SceneInstance : data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb proposed Semantic Scene Descriptor filename : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.semantic.txt
+[07:40:40:891885]:[Assets] ResourceManager.cpp(319)::loadSemanticSceneDescriptor : SSD with SceneInstanceAttributes-provided name  ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.semantic.txt successfully found and loaded
+[07:40:40:891900]:[Assets] ResourceManager.cpp(1666)::configureImporterManagerGLExtensions : Importing Basis files as BC7.
+[07:40:40:892011]:[Sim] Simulator.cpp(309)::createSceneInstance : Using scene instance-specified Light key : - no_lights -
+[07:40:40:892018]:[Metadata] MetadataMediator.cpp(66)::setSimulatorConfiguration : Set new simulator config for scene/stage : data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb and dataset : ./data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json which is currently active dataset.
+[07:40:40:892037]:[Sim] Simulator.cpp(419)::instanceStageForSceneAttributes : Start to load stage named : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb with render asset : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb and collision asset : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb
+[07:40:40:892057]:[Assets] ResourceManager.cpp(702)::createStageAssetInfosFromAttributes : Frame :{"up":[0,0,1],"front":[0,1,0],"origin":[0,0,0]} for render mesh named : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb|{"up":[0,0,1],"front":[0,1,0],"origin":[0,0,0]} for semantic mesh named : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.semantic.glb with type specified as semantic|Semantic Txtrs : True
+[07:40:40:892062]:[Assets] ResourceManager.cpp(442)::loadStage : Loading Semantic Stage mesh : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.semantic.glb
+[07:40:40:892065]:[Scene] SceneGraph.h(85)::createDrawableGroup : Created DrawableGroup: 
+[07:40:40:892068]:[Assets] ResourceManager.cpp(984)::loadStageInternal : Attempting to load stage ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.semantic.glb 
+[07:40:40:892071]:[Assets] ResourceManager.cpp(863)::loadRenderAsset : Loading Semantic Mesh asset named: ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.semantic.glb
+[07:40:40:892074]:[Assets] ResourceManager.cpp(1666)::configureImporterManagerGLExtensions : Importing Basis files as BC7.
+[07:40:42:491727]:[Assets] ResourceManager.cpp(2105)::loadMaterials : Building 41 materials for asset named 'TEEsavR23oF.semantic.glb' : 
+[07:40:42:537269]:[Assets] ResourceManager.cpp(475)::loadStage : Semantic Stage mesh : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.semantic.glb loaded.
+[07:40:42:537293]:[Assets] ResourceManager.cpp(518)::loadStage : Start load render asset ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb .
+[07:40:42:537297]:[Assets] ResourceManager.cpp(984)::loadStageInternal : Attempting to load stage ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb 
+[07:40:42:537304]:[Assets] ResourceManager.cpp(866)::loadRenderAsset : Loading general asset named: ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb
+[07:40:42:537308]:[Assets] ResourceManager.cpp(1666)::configureImporterManagerGLExtensions : Importing Basis files as BC7.
+[07:40:43:299348]:[Assets] ResourceManager.cpp(2105)::loadMaterials : Building 41 materials for asset named 'TEEsavR23oF.basis.glb' : 
+[07:40:43:299390]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 00:Flat.
+[07:40:43:299398]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 01:Flat.
+[07:40:43:299403]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 02:Flat.
+[07:40:43:299407]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 03:Flat.
+[07:40:43:299412]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 04:Flat.
+[07:40:43:299416]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 05:Flat.
+[07:40:43:299421]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 06:Flat.
+[07:40:43:299425]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 07:Flat.
+[07:40:43:299429]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 08:Flat.
+[07:40:43:299434]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 09:Flat.
+[07:40:43:299439]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 10:Flat.
+[07:40:43:299443]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 11:Flat.
+[07:40:43:299447]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 12:Flat.
+[07:40:43:299451]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 13:Flat.
+[07:40:43:299455]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 14:Flat.
+[07:40:43:299462]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 15:Flat.
+[07:40:43:299469]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 16:Flat.
+[07:40:43:299473]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 17:Flat.
+[07:40:43:299477]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 18:Flat.
+[07:40:43:299481]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 19:Flat.
+[07:40:43:299486]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 20:Flat.
+[07:40:43:299490]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 21:Flat.
+[07:40:43:299494]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 22:Flat.
+[07:40:43:299499]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 23:Flat.
+[07:40:43:299503]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 24:Flat.
+[07:40:43:299508]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 25:Flat.
+[07:40:43:299512]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 26:Flat.
+[07:40:43:299517]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 27:Flat.
+[07:40:43:299521]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 28:Flat.
+[07:40:43:299525]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 29:Flat.
+[07:40:43:299530]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 30:Flat.
+[07:40:43:299534]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 31:Flat.
+[07:40:43:299539]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 32:Flat.
+[07:40:43:299544]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 33:Flat.
+[07:40:43:299548]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 34:Flat.
+[07:40:43:299553]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 35:Flat.
+[07:40:43:299557]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 36:Flat.
+[07:40:43:299561]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 37:Flat.
+[07:40:43:299565]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 38:Flat.
+[07:40:43:299570]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 39:Flat.
+[07:40:43:299574]:[Assets] ResourceManager.cpp(2210)::loadMaterials : Idx 40:Flat.
+[07:40:43:366000]:[Sim] Simulator.cpp(446)::instanceStageForSceneAttributes : Successfully loaded stage named : ./data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb
+[07:40:43:366039]:[Sim] Simulator.cpp(203)::reconfigure : CreateSceneInstance success == true for active scene name : data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb  with renderer.
+[07:40:43:375164]:[Nav] PathFinder.cpp(571)::build : Building navmesh with 332 x 223 cells
+[07:40:43:446874]:[Nav] PathFinder.cpp(845)::build : Created navmesh with 344 vertices 168 polygons
+[07:40:43:446903]:[Sim] Simulator.cpp(908)::recomputeNavMesh : reconstruct navmesh successful
+2026-04-13 07:40:43,448 Initializing task ObjectNav-v1
+2026-04-13 07:40:43,811 agent number of parameters: 0
+  0%|          | 0/1 [00:00<?, ?it/s]BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 0 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 1 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 2 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 3 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 4 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 5 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 6 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 7 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 8 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 9 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 10 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 11 | Mode: initialize | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Best value: 20.13%
+Step: 12 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 20.13%
+Step: 13 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 20.13%
+Step: 14 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 20.13%
+Step: 15 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 20.13%
+Step: 16 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 20.13%
+Step: 17 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 20.01%
+Step: 18 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 20.05%
+Step: 19 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 20.76%
+Step: 20 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Best value: 19.67%
+Step: 21 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 19.88%
+Step: 22 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 19.11%
+Step: 23 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 19.64%
+Step: 24 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 19.15%
+Step: 25 | Mode: explore | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 21.48%
+Step: 26 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 23.40%
+Step: 27 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 25.05%
+Step: 28 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 25.81%
+Step: 29 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 26.61%
+Step: 30 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 27.08%
+Step: 31 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Best value: 25.87%
+Step: 32 | Mode: explore | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 27.05%
+Step: 33 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Best value: 24.81%
+Step: 34 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 27.09%
+Step: 35 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 27.09%
+Step: 36 | Mode: explore | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 27.65%
+Step: 37 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 27.15%
+Step: 38 | Mode: explore | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 28.85%
+Step: 39 | Mode: explore | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Best value: 27.53%
+Step: 40 | Mode: explore | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 27.29%
+Step: 41 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 26.90%
+Step: 42 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 26.42%
+Step: 43 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 26.57%
+Step: 44 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 26.57%
+Step: 45 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 26.57%
+Step: 46 | Mode: explore | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 27.85%
+Step: 47 | Mode: explore | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Best value: 26.34%
+Step: 48 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Best value: 23.00%
+Step: 49 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 23.48%
+Step: 50 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 24.18%
+Step: 51 | Mode: explore | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 24.18%
+Step: 52 | Mode: explore | Action: 1
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 24.18%
+Step: 53 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Sticking to last point.
+Best value: 24.17%
+Step: 54 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Best value: 22.74%
+Step: 55 | Mode: explore | Action: 3
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 56 | Mode: navigate | Action: 2
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 57 | Mode: navigate | Action: 1
+100%|██████████| 1/1 [00:18<00:00, 18.72s/it]100%|██████████| 1/1 [00:18<00:00, 18.72s/it]
+2026-04-13 07:41:03,962 Average episode reward: 6.6503
+2026-04-13 07:41:03,962 Average episode distance_to_goal: 0.0457
+2026-04-13 07:41:03,962 Average episode success: 1.0000
+2026-04-13 07:41:03,962 Average episode spl: 0.7376
+2026-04-13 07:41:03,962 Average episode soft_spl: 0.7297
+2026-04-13 07:41:03,962 Average episode distance_to_goal_reward: 0.0000
+2026-04-13 07:41:03,962 Average episode traveled_stairs: 0.0000
+2026-04-13 07:41:03,962 Average episode yaw: -60.0000
+2026-04-13 07:41:03,962 Average episode target_detected: 1.0000
+2026-04-13 07:41:03,962 Average episode stop_called: 1.0000
+[07:41:03:963025]:[Physics] PhysicsManager.cpp(54)::~PhysicsManager : Deconstructing PhysicsManager
+[07:41:03:963062]:[Scene] SceneManager.h(21)::~SceneManager : Deconstructing SceneManager
+[07:41:03:963065]:[Scene] SceneGraph.h(25)::~SceneGraph : Deconstructing SceneGraph
+[07:41:03:963289]:[Sensor] Sensor.cpp(69)::~Sensor : Deconstructing Sensor
+[07:41:03:963440]:[Sensor] Sensor.cpp(69)::~Sensor : Deconstructing Sensor
+[07:41:03:963449]:[Scene] SceneGraph.h(25)::~SceneGraph : Deconstructing SceneGraph
+[07:41:03:963532]:[Scene] SemanticScene.h(48)::~SemanticScene : Deconstructing SemanticScene
+[07:41:03:965818]:[Gfx] Renderer.cpp(71)::~Impl : Deconstructing Renderer
+[07:41:03:965841]:[Gfx] WindowlessContext.h(17)::~WindowlessContext : Deconstructing WindowlessContext
+BLIP2ITMClient.cosine: (480, 640, 3), Seems like there is a toilet ahead.
+Step: 58 | Mode: navigate | Action: 0
+Success rate: 100.00% (1 out of 1)
+wall_time_seconds=30.47

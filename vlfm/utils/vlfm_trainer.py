@@ -36,6 +36,8 @@ from habitat_baselines.utils.info_dict import (
 )
 from omegaconf import OmegaConf
 
+from vlfm.utils.log_saver import is_evaluated
+
 
 def extract_scalars_from_info(info: Dict[str, Any]) -> Dict[str, float]:
     info_filtered = {k: v for k, v in info.items() if not isinstance(v, list)}
@@ -168,54 +170,70 @@ class VLFMTrainer(PPOTrainer):
         while len(stats_episodes) < (number_of_eval_episodes * evals_per_ep) and self.envs.num_envs > 0:
             current_episodes_info = self.envs.current_episodes()
 
-            with inference_mode():
-                action_data = self._agent.actor_critic.act(
-                    batch,
-                    test_recurrent_hidden_states,
-                    prev_actions,
-                    not_done_masks,
-                    deterministic=False,
-                )
-                if "VLFM_RECORD_ACTIONS_DIR" in os.environ:
-                    action_id = action_data.actions.cpu()[0].item()
-                    filepath = os.path.join(
-                        os.environ["VLFM_RECORD_ACTIONS_DIR"],
-                        "actions.txt",
-                    )
-                    # If the file doesn't exist, create it
-                    if not os.path.exists(filepath):
-                        open(filepath, "w").close()
-                    with open(filepath, "a") as f:
-                        f.write(f"{action_id}\n")
+            skip_evaluated_episode = False
+            if self.envs.num_envs == 1 and "ZSOS_LOG_DIR" in os.environ:
+                current_episode = current_episodes_info[0]
+                if is_evaluated(current_episode.episode_id, current_episode.scene_id):
+                    print(f"Episode {current_episode.episode_id} in scene {current_episode.scene_id} already evaluated")
+                    skip_evaluated_episode = True
 
-                if action_data.should_inserts is None:
-                    test_recurrent_hidden_states = action_data.rnn_hidden_states
-                    prev_actions.copy_(action_data.actions)  # type: ignore
+            if skip_evaluated_episode:
+                if is_continuous_action_space(self._env_spec.action_space):
+                    step_data = [np.zeros_like(self._env_spec.action_space.low)]
                 else:
-                    for i, should_insert in enumerate(action_data.should_inserts):
-                        if should_insert.item():
-                            test_recurrent_hidden_states[i] = action_data.rnn_hidden_states[i]
-                            prev_actions[i].copy_(action_data.actions[i])  # type: ignore
-            # NB: Move actions to CPU.  If CUDA tensors are
-            # sent in to env.step(), that will create CUDA contexts
-            # in the subprocesses.
-            if is_continuous_action_space(self._env_spec.action_space):
-                # Clipping actions to the specified limits
-                step_data = [
-                    np.clip(
-                        a.numpy(),
-                        self._env_spec.action_space.low,
-                        self._env_spec.action_space.high,
-                    )
-                    for a in action_data.env_actions.cpu()
-                ]
+                    step_data = [0]
+                outputs = self.envs.step(step_data)
+                observations, rewards_l, dones, infos = [list(x) for x in zip(*outputs)]
+                policy_infos = [{} for _ in infos]
             else:
-                step_data = [a.item() for a in action_data.env_actions.cpu()]
+                with inference_mode():
+                    action_data = self._agent.actor_critic.act(
+                        batch,
+                        test_recurrent_hidden_states,
+                        prev_actions,
+                        not_done_masks,
+                        deterministic=False,
+                    )
+                    if "VLFM_RECORD_ACTIONS_DIR" in os.environ:
+                        action_id = action_data.actions.cpu()[0].item()
+                        filepath = os.path.join(
+                            os.environ["VLFM_RECORD_ACTIONS_DIR"],
+                            "actions.txt",
+                        )
+                        # If the file doesn't exist, create it
+                        if not os.path.exists(filepath):
+                            open(filepath, "w").close()
+                        with open(filepath, "a") as f:
+                            f.write(f"{action_id}\n")
 
-            outputs = self.envs.step(step_data)
+                    if action_data.should_inserts is None:
+                        test_recurrent_hidden_states = action_data.rnn_hidden_states
+                        prev_actions.copy_(action_data.actions)  # type: ignore
+                    else:
+                        for i, should_insert in enumerate(action_data.should_inserts):
+                            if should_insert.item():
+                                test_recurrent_hidden_states[i] = action_data.rnn_hidden_states[i]
+                                prev_actions[i].copy_(action_data.actions[i])  # type: ignore
+                # NB: Move actions to CPU.  If CUDA tensors are
+                # sent in to env.step(), that will create CUDA contexts
+                # in the subprocesses.
+                if is_continuous_action_space(self._env_spec.action_space):
+                    # Clipping actions to the specified limits
+                    step_data = [
+                        np.clip(
+                            a.numpy(),
+                            self._env_spec.action_space.low,
+                            self._env_spec.action_space.high,
+                        )
+                        for a in action_data.env_actions.cpu()
+                    ]
+                else:
+                    step_data = [a.item() for a in action_data.env_actions.cpu()]
 
-            observations, rewards_l, dones, infos = [list(x) for x in zip(*outputs)]
-            policy_infos = self._agent.actor_critic.get_extra(action_data, infos, dones)
+                outputs = self.envs.step(step_data)
+
+                observations, rewards_l, dones, infos = [list(x) for x in zip(*outputs)]
+                policy_infos = self._agent.actor_critic.get_extra(action_data, infos, dones)
             for i in range(len(policy_infos)):
                 infos[i].update(policy_infos[i])
             batch = batch_obs(  # type: ignore

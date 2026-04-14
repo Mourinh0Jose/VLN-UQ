@@ -1,0 +1,121 @@
+=== VLFM Original ===
+
+Total episodes: 90
+
+
+Metric   | Average
+---------+--------
+Success  | 51.11% 
+SPL      | 30.04% 
+Soft SPL | 36.79% 
+Failure Cause                                            | Frequency | Percentage
+---------------------------------------------------------+-----------+-----------
+succeeded!                                               | 46        | 51.11%    
+false_positive                                           | 24        | 26.67%    
+never_saw_target_did_not_travel_stairs_likely_infeasible | 12        | 13.33%    
+never_saw_target_did_not_travel_stairs_feasible          | 7         | 7.78%     
+bad_stop_true_positive                                   | 1         | 1.11%     
+
+Category     | Average Failure Rate
+-------------+---------------------
+tv           | 91.67% (11/12)      
+couch        | 64.29% (9/14)       
+toilet       | 52.94% (9/17)       
+potted plant | 87.50% (7/8)        
+bed          | 29.41% (5/17)       
+chair        | 13.64% (3/22)       
+
+Conditioned on failure cause: false_positive
+Category     | % Occurrence for false_positive
+-------------+--------------------------------
+couch        | 33.33% (8)                     
+tv           | 29.17% (7)                     
+potted plant | 25.00% (6)                     
+toilet       | 8.33% (2)                      
+chair        | 4.17% (1)                      
+
+Conditioned on failure cause: false_negative
+Category | % Occurrence for false_negative
+---------+--------------------------------
+
+=== Greedy Frontier Baseline ===
+
+Total episodes: 90
+
+
+Metric   | Average
+---------+--------
+Success  | 50.00% 
+SPL      | 29.88% 
+Soft SPL | 36.58% 
+Failure Cause                                            | Frequency | Percentage
+---------------------------------------------------------+-----------+-----------
+succeeded!                                               | 45        | 50.00%    
+false_positive                                           | 24        | 26.67%    
+never_saw_target_did_not_travel_stairs_likely_infeasible | 11        | 12.22%    
+never_saw_target_did_not_travel_stairs_feasible          | 8         | 8.89%     
+false_negative                                           | 1         | 1.11%     
+bad_stop_true_positive                                   | 1         | 1.11%     
+
+Category     | Average Failure Rate
+-------------+---------------------
+tv           | 91.67% (11/12)      
+couch        | 64.29% (9/14)       
+toilet       | 52.94% (9/17)       
+potted plant | 100.00% (8/8)       
+bed          | 29.41% (5/17)       
+chair        | 13.64% (3/22)       
+
+Conditioned on failure cause: false_positive
+Category     | % Occurrence for false_positive
+-------------+--------------------------------
+tv           | 29.17% (7)                     
+potted plant | 29.17% (7)                     
+couch        | 25.00% (6)                     
+toilet       | 12.50% (3)                     
+chair        | 4.17% (1)                      
+
+Conditioned on failure cause: false_negative
+Category | % Occurrence for false_negative
+---------+--------------------------------
+couch    | 100.00% (1)                    
+
+
+=== VLFM Original (n=90) ===
+  Success:  0.511 +/- 0.104
+  SPL:      0.300 +/- 0.073
+  SoftSPL:  0.368 +/- 0.068
+  Dist2Goal:5.825
+  Failure causes:
+    - false_positive: 24
+    - never_saw_target_did_not_travel_stairs_likely_infeasible: 12
+    - never_saw_target_did_not_travel_stairs_feasible: 7
+    - bad_stop_true_positive: 1
+
+=== Greedy Frontier (n=90) ===
+  Success:  0.500 +/- 0.104
+  SPL:      0.299 +/- 0.072
+  SoftSPL:  0.366 +/- 0.069
+  Dist2Goal:5.767
+  Failure causes:
+    - false_positive: 24
+    - never_saw_target_did_not_travel_stairs_likely_infeasible: 11
+    - never_saw_target_did_not_travel_stairs_feasible: 8
+    - false_negative: 1
+    - bad_stop_true_positive: 1
+
+=== Paired (n=90) ===
+  mean Delta Success (VLFM - Baseline): +0.011 +/- 0.066
+  mean Delta SPL     (VLFM - Baseline): +0.002 +/- 0.061
+  mean Delta SoftSPL (VLFM - Baseline): +0.002 +/- 0.054
+  success flips: 9
+  Flip episodes:
+    - scene=4ok3usBNeis ep=2 VLFM=1(did_not_fail) Baseline=0(never_saw_target_did_not_travel_stairs_feasible)
+    - scene=4ok3usBNeis ep=9 VLFM=1(did_not_fail) Baseline=0(false_positive)
+    - scene=5cdEh9F2hJL ep=15 VLFM=0(never_saw_target_did_not_travel_stairs_feasible) Baseline=1(did_not_fail)
+    - scene=6s7QHgap2fW ep=1 VLFM=0(false_positive) Baseline=1(did_not_fail)
+    - scene=6s7QHgap2fW ep=13 VLFM=1(did_not_fail) Baseline=0(false_positive)
+    - scene=6s7QHgap2fW ep=16 VLFM=1(did_not_fail) Baseline=0(never_saw_target_did_not_travel_stairs_feasible)
+    - scene=6s7QHgap2fW ep=17 VLFM=0(never_saw_target_did_not_travel_stairs_feasible) Baseline=1(did_not_fail)
+    - scene=wcojb4TFT35 ep=1 VLFM=1(did_not_fail) Baseline=0(false_positive)
+    - scene=wcojb4TFT35 ep=8 VLFM=0(false_positive) Baseline=1(did_not_fail)

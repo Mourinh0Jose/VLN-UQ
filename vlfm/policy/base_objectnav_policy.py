@@ -57,6 +57,7 @@ class BaseObjectNavPolicy(BasePolicy):
         vqa_prompt: str = "Is this ",
         coco_threshold: float = 0.8,
         non_coco_threshold: float = 0.4,
+        frontier_selector: str = "semantic",
         *args: Any,
         **kwargs: Any,
     ) -> None:
@@ -75,6 +76,7 @@ class BaseObjectNavPolicy(BasePolicy):
         self._vqa_prompt = vqa_prompt
         self._coco_threshold = coco_threshold
         self._non_coco_threshold = non_coco_threshold
+        self._frontier_selector = frontier_selector.lower()
 
         self._num_steps = 0
         self._did_reset = False
@@ -390,6 +392,7 @@ class VLFMConfig:
     coco_threshold: float = 0.8
     non_coco_threshold: float = 0.4
     agent_radius: float = 0.18
+    frontier_selector: str = "semantic"
 
     @classmethod  # type: ignore
     @property

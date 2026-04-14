@@ -1,6 +1,7 @@
 # Copyright (c) 2023 Boston Dynamics AI Institute LLC. All rights reserved.
 
 import os
+from collections import deque
 from typing import Any, Dict, List, Tuple, Union
 
 import cv2
@@ -67,8 +68,9 @@ class BaseITMPolicy(BaseObjectNavPolicy):
             print("No frontiers found during exploration, stopping.")
             return self._stop_action
         best_frontier, best_value = self._get_best_frontier(observations, frontiers)
-        os.environ["DEBUG_INFO"] = f"Best value: {best_value*100:.2f}%"
-        print(f"Best value: {best_value*100:.2f}%")
+        score_text = self._format_frontier_score(best_value)
+        os.environ["DEBUG_INFO"] = score_text
+        print(score_text)
         pointnav_action = self._pointnav(best_frontier, stop=False)
 
         return pointnav_action
@@ -88,9 +90,13 @@ class BaseITMPolicy(BaseObjectNavPolicy):
         Returns:
             Tuple[np.ndarray, float]: The best frontier and its value.
         """
-        # The points and values will be sorted in descending order
-        sorted_pts, sorted_values = self._sort_frontiers_by_value(observations, frontiers)
         robot_xy = self._observations_cache["robot_xy"]
+        selector = self._get_frontier_selector()
+        if selector == "semantic":
+            # The points and values will be sorted in descending order
+            sorted_pts, sorted_values = self._sort_frontiers_by_value(observations, frontiers)
+        else:
+            sorted_pts, sorted_values = self._sort_frontiers_geometric(frontiers, robot_xy, selector)
         best_frontier_idx = None
         top_two_values = tuple(sorted_values[:2])
 
@@ -147,9 +153,106 @@ class BaseITMPolicy(BaseObjectNavPolicy):
         self._acyclic_enforcer.add_state_action(robot_xy, best_frontier, top_two_values)
         self._last_value = best_value
         self._last_frontier = best_frontier
-        os.environ["DEBUG_INFO"] += f" Best value: {best_value*100:.2f}%"
+        os.environ["DEBUG_INFO"] += f" {self._format_frontier_score(best_value)}"
 
         return best_frontier, best_value
+
+    def _get_frontier_selector(self) -> str:
+        selector = getattr(self, "_frontier_selector", "semantic")
+        if selector not in {"semantic", "nearest", "cheapest"}:
+            print(f"Unknown frontier selector '{selector}', falling back to semantic.")
+            return "semantic"
+        return selector
+
+    def _format_frontier_score(self, score: float) -> str:
+        selector = self._get_frontier_selector()
+        if selector == "semantic":
+            return f"Best value: {score*100:.2f}%"
+        return f"{selector.title()} frontier cost: {-score:.2f}m"
+
+    def _sort_frontiers_geometric(
+        self,
+        frontiers: np.ndarray,
+        robot_xy: np.ndarray,
+        selector: str,
+    ) -> Tuple[np.ndarray, List[float]]:
+        if selector == "nearest":
+            costs = np.linalg.norm(frontiers - robot_xy, axis=1)
+        elif selector == "cheapest":
+            costs = self._compute_frontier_path_costs(frontiers, robot_xy)
+            if costs is None or not np.isfinite(costs).any():
+                print("Cheapest frontier fallback: could not compute grid costs, using nearest frontier.")
+                costs = np.linalg.norm(frontiers - robot_xy, axis=1)
+        else:
+            raise ValueError(f"Unsupported frontier selector: {selector}")
+
+        sorted_inds = np.argsort(costs)
+        sorted_frontiers = np.array([frontiers[i] for i in sorted_inds])
+        sorted_scores = (-costs[sorted_inds]).tolist()
+        return sorted_frontiers, sorted_scores
+
+    def _compute_frontier_path_costs(self, frontiers: np.ndarray, robot_xy: np.ndarray) -> Union[np.ndarray, None]:
+        if not hasattr(self, "_obstacle_map"):
+            return None
+
+        explored_area = cv2.dilate(
+            self._obstacle_map.explored_area.astype(np.uint8),
+            np.ones((5, 5), np.uint8),
+            iterations=1,
+        ).astype(bool)
+        traversable = np.logical_and(
+            self._obstacle_map._navigable_map,
+            explored_area,
+        ).copy()
+        if traversable.size == 0:
+            return None
+
+        height, width = traversable.shape
+        robot_px = self._obstacle_map._xy_to_px(robot_xy.reshape(1, 2))[0]
+        frontier_px = self._obstacle_map._xy_to_px(frontiers)
+
+        robot_col = int(np.clip(robot_px[0], 0, width - 1))
+        robot_row = int(np.clip(robot_px[1], 0, height - 1))
+        frontier_cols = np.clip(frontier_px[:, 0], 0, width - 1).astype(int)
+        frontier_rows = np.clip(frontier_px[:, 1], 0, height - 1).astype(int)
+
+        traversable[robot_row, robot_col] = True
+        traversable[frontier_rows, frontier_cols] = True
+
+        frontier_cells = {}
+        remaining = set()
+        for idx, (row, col) in enumerate(zip(frontier_rows, frontier_cols)):
+            key = (int(row), int(col))
+            frontier_cells.setdefault(key, []).append(idx)
+            remaining.add(key)
+        remaining.discard((robot_row, robot_col))
+
+        distances = np.full((height, width), -1, dtype=np.int32)
+        distances[robot_row, robot_col] = 0
+        queue = deque([(robot_row, robot_col)])
+
+        while queue and remaining:
+            row, col = queue.popleft()
+            next_distance = distances[row, col] + 1
+            for d_row, d_col in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                new_row = row + d_row
+                new_col = col + d_col
+                if new_row < 0 or new_row >= height or new_col < 0 or new_col >= width:
+                    continue
+                if not traversable[new_row, new_col] or distances[new_row, new_col] != -1:
+                    continue
+                distances[new_row, new_col] = next_distance
+                queue.append((new_row, new_col))
+                remaining.discard((new_row, new_col))
+
+        costs = np.full(len(frontiers), np.inf, dtype=np.float32)
+        for (row, col), frontier_indices in frontier_cells.items():
+            if distances[row, col] == -1:
+                continue
+            cost_meters = distances[row, col] / float(self._obstacle_map.pixels_per_meter)
+            costs[frontier_indices] = cost_meters
+
+        return costs
 
     def _get_policy_info(self, detections: ObjectDetections) -> Dict[str, Any]:
         policy_info = super()._get_policy_info(detections)
@@ -257,7 +360,8 @@ class ITMPolicyV2(BaseITMPolicy):
         deterministic: bool = False,
     ) -> Any:
         self._pre_step(observations, masks)
-        self._update_value_map()
+        if self._get_frontier_selector() == "semantic":
+            self._update_value_map()
         return super().act(observations, rnn_hidden_states, prev_actions, masks, deterministic)
 
     def _sort_frontiers_by_value(

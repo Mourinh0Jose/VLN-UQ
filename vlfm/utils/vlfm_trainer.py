@@ -186,6 +186,12 @@ class VLFMTrainer(PPOTrainer):
                 observations, rewards_l, dones, infos = [list(x) for x in zip(*outputs)]
                 policy_infos = [{} for _ in infos]
             else:
+                if hasattr(self._agent.actor_critic, "set_mc_episode_context"):
+                    current_episode = current_episodes_info[0]
+                    self._agent.actor_critic.set_mc_episode_context(
+                        current_episode.scene_id,
+                        current_episode.episode_id,
+                    )
                 with inference_mode():
                     action_data = self._agent.actor_critic.act(
                         batch,

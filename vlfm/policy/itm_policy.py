@@ -1,6 +1,7 @@
 # Copyright (c) 2023 Boston Dynamics AI Institute LLC. All rights reserved.
 
 import os
+import zlib
 from collections import deque
 from typing import Any, Dict, List, Tuple, Union
 
@@ -22,6 +23,28 @@ except Exception:
     pass
 
 PROMPT_SEPARATOR = "|"
+
+
+def _stable_int_from_episode_id(episode_id: object) -> int:
+    """Convert an episode id into a stable uint32 seed component."""
+    return zlib.crc32(str(episode_id).encode("utf-8"))
+
+
+def make_mc_sample_seeds(
+    master_seed: int,
+    episode_id: object,
+    decision_counter: int,
+    n_samples: int,
+) -> List[int]:
+    """Generate reproducible MC seeds for one decision step."""
+    seed_seq = np.random.SeedSequence(
+        [
+            int(master_seed),
+            int(_stable_int_from_episode_id(episode_id)),
+            int(decision_counter),
+        ]
+    )
+    return seed_seq.generate_state(n_samples, dtype=np.uint32).astype(int).tolist()
 
 
 class BaseITMPolicy(BaseObjectNavPolicy):
@@ -54,6 +77,7 @@ class BaseITMPolicy(BaseObjectNavPolicy):
             obstacle_map=self._obstacle_map if sync_explored_areas else None,
         )
         self._acyclic_enforcer = AcyclicEnforcer()
+        self._mc_decision_log: List[Dict[str, Any]] = []
 
     def _reset(self) -> None:
         super()._reset()
@@ -61,6 +85,19 @@ class BaseITMPolicy(BaseObjectNavPolicy):
         self._acyclic_enforcer = AcyclicEnforcer()
         self._last_value = float("-inf")
         self._last_frontier = np.zeros(2)
+        self._mc_decision_log = []
+        self.reset_mc_for_episode(getattr(self, "_mc_episode_id", "unknown"))
+
+    def reset_mc_for_episode(self, episode_id: object) -> None:
+        """Reset MC state for a new episode."""
+        self._mc_episode_id = episode_id
+        self._mc_decision_counter = 0
+
+    def set_mc_episode_context(self, scene_id: object, episode_id: object) -> None:
+        """Set the active Habitat episode context for reproducible MC seeds."""
+        episode_key = f"{scene_id}:{episode_id}"
+        if getattr(self, "_mc_episode_id", None) != episode_key:
+            self.reset_mc_for_episode(episode_key)
 
     def _explore(self, observations: Union[Dict[str, Tensor], "TensorDict"]) -> Tensor:
         frontiers = self._observations_cache["frontier_sensor"]
@@ -95,10 +132,13 @@ class BaseITMPolicy(BaseObjectNavPolicy):
         if selector == "semantic":
             # The points and values will be sorted in descending order
             sorted_pts, sorted_values = self._sort_frontiers_by_value(observations, frontiers)
+        elif selector == "mc_risk_aware":
+            sorted_pts, sorted_values = self._sort_frontiers_mc_risk_aware(observations, frontiers)
         else:
             sorted_pts, sorted_values = self._sort_frontiers_geometric(frontiers, robot_xy, selector)
         best_frontier_idx = None
         top_two_values = tuple(sorted_values[:2])
+        cyclic_suppressed = False
 
         os.environ["DEBUG_INFO"] = ""
         # If there is a last point pursued, then we consider sticking to pursuing it
@@ -136,6 +176,7 @@ class BaseITMPolicy(BaseObjectNavPolicy):
                 cyclic = self._acyclic_enforcer.check_cyclic(robot_xy, frontier, top_two_values)
                 if cyclic:
                     print("Suppressed cyclic frontier.")
+                    cyclic_suppressed = True
                     continue
                 best_frontier_idx = idx
                 break
@@ -155,11 +196,21 @@ class BaseITMPolicy(BaseObjectNavPolicy):
         self._last_frontier = best_frontier
         os.environ["DEBUG_INFO"] += f" {self._format_frontier_score(best_value)}"
 
+        if selector == "mc_risk_aware":
+            self._record_mc_decision(
+                frontiers=frontiers,
+                sorted_pts=sorted_pts,
+                sorted_values=sorted_values,
+                selected_idx=best_frontier_idx,
+                top_two_values=top_two_values,
+                cyclic_suppressed=cyclic_suppressed,
+            )
+
         return best_frontier, best_value
 
     def _get_frontier_selector(self) -> str:
         selector = getattr(self, "_frontier_selector", "semantic")
-        if selector not in {"semantic", "nearest", "cheapest"}:
+        if selector not in {"semantic", "nearest", "cheapest", "mc_risk_aware"}:
             print(f"Unknown frontier selector '{selector}', falling back to semantic.")
             return "semantic"
         return selector
@@ -168,6 +219,8 @@ class BaseITMPolicy(BaseObjectNavPolicy):
         selector = self._get_frontier_selector()
         if selector == "semantic":
             return f"Best value: {score*100:.2f}%"
+        if selector == "mc_risk_aware":
+            return f"MC risk-aware frontier score: {score:.4f}"
         return f"{selector.title()} frontier cost: {-score:.2f}m"
 
     def _sort_frontiers_geometric(
@@ -257,6 +310,10 @@ class BaseITMPolicy(BaseObjectNavPolicy):
     def _get_policy_info(self, detections: ObjectDetections) -> Dict[str, Any]:
         policy_info = super()._get_policy_info(detections)
 
+        if self._get_frontier_selector() == "mc_risk_aware":
+            policy_info["mc_decision_log"] = getattr(self, "_mc_decision_log", [])
+            policy_info["mc_episode_summary"] = self._get_mc_episode_summary()
+
         if not self._visualize:
             return policy_info
 
@@ -318,6 +375,100 @@ class BaseITMPolicy(BaseObjectNavPolicy):
     ) -> Tuple[np.ndarray, List[float]]:
         raise NotImplementedError
 
+    def _sort_frontiers_mc_risk_aware(
+        self, observations: "TensorDict", frontiers: np.ndarray
+    ) -> Tuple[np.ndarray, List[float]]:
+        raise NotImplementedError
+
+    @staticmethod
+    def _point_to_log(point: Union[np.ndarray, List[float], Tuple[float, ...]]) -> List[float]:
+        return [float(x) for x in np.asarray(point, dtype=np.float32).reshape(-1).tolist()]
+
+    @staticmethod
+    def _points_match(left: Union[np.ndarray, List[float]], right: Union[np.ndarray, List[float]]) -> bool:
+        return bool(np.allclose(np.asarray(left, dtype=np.float32), np.asarray(right, dtype=np.float32)))
+
+    def _record_mc_decision(
+        self,
+        frontiers: np.ndarray,
+        sorted_pts: np.ndarray,
+        sorted_values: List[float],
+        selected_idx: int,
+        top_two_values: Tuple[float, ...],
+        cyclic_suppressed: bool,
+    ) -> None:
+        if len(sorted_pts) == 0:
+            return
+
+        selected_frontier = sorted_pts[selected_idx]
+        baseline_top = getattr(self, "_last_mc_baseline_top_frontier", sorted_pts[0])
+        mc_top = getattr(self, "_last_mc_top_frontier", sorted_pts[0])
+        records = []
+
+        for record in getattr(self, "_last_mc_frontier_records", []):
+            point = record["point"]
+            records.append(
+                {
+                    "frontier_rank_baseline": int(record["baseline_rank"]),
+                    "frontier_xy": self._point_to_log(point),
+                    "baseline_value": float(record["baseline_value"]),
+                    "mc_samples": [float(sample) for sample in record["mc_samples"]],
+                    "mc_mean": float(record["mc_mean"]),
+                    "mc_std": float(record["mc_std"]),
+                    "risk_score": float(record["risk_score"]),
+                    "selected_by_baseline": int(record["baseline_rank"]) == 0,
+                    "selected_by_mc_risk": self._points_match(point, mc_top),
+                    "selected_final": self._points_match(point, selected_frontier),
+                }
+            )
+
+        selected_record = next((record for record in records if record["selected_final"]), None)
+        decision_record = {
+            "decision_step": int(getattr(self, "_last_mc_decision_step", len(self._mc_decision_log))),
+            "selector": "mc_risk_aware",
+            "num_frontiers": int(len(frontiers)),
+            "mc_top_k": int(self._mc_top_k),
+            "mc_n_samples": int(self._mc_n_samples),
+            "mc_keep_prob": float(self._mc_keep_prob),
+            "mc_noise_rel": float(self._mc_noise_rel),
+            "mc_lambda": float(self._mc_lambda),
+            "sample_seeds": [int(seed) for seed in getattr(self, "_last_mc_sample_seeds", [])],
+            "baseline_top_frontier_xy": self._point_to_log(baseline_top),
+            "mc_top_frontier_xy": self._point_to_log(mc_top),
+            "final_selected_frontier_xy": self._point_to_log(selected_frontier),
+            "mc_changed_top_from_baseline": not self._points_match(mc_top, baseline_top),
+            "changed_from_baseline": not self._points_match(selected_frontier, baseline_top),
+            "cyclic_suppressed": bool(cyclic_suppressed),
+            "top_two_values": [float(value) for value in top_two_values],
+            "selected_value": float(sorted_values[selected_idx]),
+            "selected_mc_std": None if selected_record is None else float(selected_record["mc_std"]),
+            "topk_frontier_records": records,
+        }
+        self._mc_decision_log.append(decision_record)
+
+    def _get_mc_episode_summary(self) -> Dict[str, Any]:
+        decision_log = getattr(self, "_mc_decision_log", [])
+        selected_stds = [
+            record["selected_mc_std"] for record in decision_log if record.get("selected_mc_std") is not None
+        ]
+        all_topk_stds = [
+            frontier_record["mc_std"]
+            for decision_record in decision_log
+            for frontier_record in decision_record.get("topk_frontier_records", [])
+        ]
+        return {
+            "method": "mc_risk_aware",
+            "episode_seed_id": str(getattr(self, "_mc_episode_id", "unknown")),
+            "num_decisions": int(len(decision_log)),
+            "num_changed_decisions": int(sum(record["changed_from_baseline"] for record in decision_log)),
+            "num_mc_changed_top_decisions": int(
+                sum(record["mc_changed_top_from_baseline"] for record in decision_log)
+            ),
+            "avg_selected_mc_std": float(np.mean(selected_stds)) if len(selected_stds) > 0 else 0.0,
+            "avg_all_topk_mc_std": float(np.mean(all_topk_stds)) if len(all_topk_stds) > 0 else 0.0,
+            "cyclic_suppression_count": int(sum(record["cyclic_suppressed"] for record in decision_log)),
+        }
+
 
 class ITMPolicy(BaseITMPolicy):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -360,7 +511,7 @@ class ITMPolicyV2(BaseITMPolicy):
         deterministic: bool = False,
     ) -> Any:
         self._pre_step(observations, masks)
-        if self._get_frontier_selector() == "semantic":
+        if self._get_frontier_selector() in {"semantic", "mc_risk_aware"}:
             self._update_value_map()
         return super().act(observations, rnn_hidden_states, prev_actions, masks, deterministic)
 
@@ -369,6 +520,97 @@ class ITMPolicyV2(BaseITMPolicy):
     ) -> Tuple[np.ndarray, List[float]]:
         sorted_frontiers, sorted_values = self._value_map.sort_waypoints(frontiers, 0.5)
         return sorted_frontiers, sorted_values
+
+    def _sort_frontiers_mc_risk_aware(
+        self, observations: "TensorDict", frontiers: np.ndarray
+    ) -> Tuple[np.ndarray, List[float]]:
+        if len(frontiers) == 0:
+            return frontiers, []
+
+        reduce_fn = None
+        if self._value_map._value_channels > 1:
+            reduce_fn = lambda values: [value[self._mc_channel_idx] for value in values]
+        baseline_pts, baseline_values = self._value_map.sort_waypoints(
+            frontiers,
+            self._mc_radius_m,
+            reduce_fn=reduce_fn,
+        )
+
+        def to_scalar(value: Union[float, Tuple[float, ...]]) -> float:
+            return float(value[0]) if isinstance(value, tuple) else float(value)
+
+        baseline_values_scalar = [to_scalar(value) for value in baseline_values]
+        top_k = min(self._mc_top_k, len(baseline_pts))
+        top_pts = baseline_pts[:top_k]
+        remaining_pts = baseline_pts[top_k:]
+
+        decision_counter = getattr(self, "_mc_decision_counter", 0)
+        sample_seeds = make_mc_sample_seeds(
+            master_seed=self._mc_seed_master,
+            episode_id=getattr(self, "_mc_episode_id", "unknown"),
+            decision_counter=decision_counter,
+            n_samples=self._mc_n_samples,
+        )
+        self._mc_decision_counter = decision_counter + 1
+
+        top_records = []
+        for baseline_rank, point in enumerate(top_pts):
+            summary = self._value_map.mc_summary_at_waypoint(
+                point=point,
+                radius_m=self._mc_radius_m,
+                n_samples=self._mc_n_samples,
+                keep_prob=self._mc_keep_prob,
+                noise_rel=self._mc_noise_rel,
+                lambda_risk=self._mc_lambda,
+                sample_seeds=sample_seeds,
+                channel_idx=self._mc_channel_idx,
+                min_values_for_mc=self._mc_min_values_for_mc,
+            )
+            top_records.append(
+                {
+                    "point": point,
+                    "baseline_rank": baseline_rank,
+                    "baseline_value": baseline_values_scalar[baseline_rank],
+                    "mc_samples": summary["samples"],
+                    "mc_mean": summary["mean"],
+                    "mc_std": summary["std"],
+                    "risk_score": summary["risk_score"],
+                }
+            )
+
+        top_records = sorted(top_records, key=lambda record: record["risk_score"], reverse=True)
+        reranked_top_pts = [record["point"] for record in top_records]
+        reranked_top_values = [float(record["risk_score"]) for record in top_records]
+
+        if len(remaining_pts) > 0:
+            min_top_risk = min(reranked_top_values) if len(reranked_top_values) > 0 else 0.0
+            remaining_values = [float(min_top_risk - 0.01 - 0.001 * i) for i in range(len(remaining_pts))]
+        else:
+            remaining_values = []
+
+        sorted_pts = np.array(reranked_top_pts + list(remaining_pts))
+        sorted_values = reranked_top_values + remaining_values
+
+        self._last_mc_baseline_top_frontier = baseline_pts[0]
+        self._last_mc_top_frontier = sorted_pts[0]
+        self._last_mc_frontier_records = top_records
+        self._last_mc_sample_seeds = sample_seeds
+        self._last_mc_decision_step = decision_counter
+
+        if getattr(self, "_mc_debug", False):
+            print("[MC risk-aware] seeds:", sample_seeds)
+            for rank, record in enumerate(top_records):
+                print(
+                    f"  rank={rank}",
+                    f"baseline_rank={record['baseline_rank']}",
+                    f"baseline={record['baseline_value']:.4f}",
+                    f"mu={record['mc_mean']:.4f}",
+                    f"std={record['mc_std']:.4f}",
+                    f"risk={record['risk_score']:.4f}",
+                    f"samples={record['mc_samples']}",
+                )
+
+        return sorted_pts, sorted_values
 
 
 class ITMPolicyV3(ITMPolicyV2):

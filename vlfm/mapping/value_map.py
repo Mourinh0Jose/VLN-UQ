@@ -7,7 +7,7 @@ import os.path as osp
 import shutil
 import time
 import warnings
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import cv2
 import numpy as np
@@ -185,6 +185,182 @@ class ValueMap(BaseMap):
         sorted_frontiers = np.array([waypoints[i] for i in sorted_inds])
 
         return sorted_frontiers, sorted_values
+
+    def _xy_to_value_map_px(self, point: np.ndarray) -> Tuple[int, int]:
+        """Convert an episodic (x, y) waypoint to value-map pixel coordinates.
+
+        This mirrors the coordinate transform used by sort_waypoints().
+        """
+        x, y = point
+        px = int(-x * self.pixels_per_meter) + self._episode_pixel_origin[0]
+        py = int(-y * self.pixels_per_meter) + self._episode_pixel_origin[1]
+        point_px = (self._value_map.shape[0] - px, py)
+        return int(point_px[0]), int(point_px[1])
+
+    def _positive_values_within_radius(
+        self,
+        image: np.ndarray,
+        pixel_location: Tuple[int, int],
+        radius_px: int,
+    ) -> np.ndarray:
+        """Return positive local values inside the baseline circular radius."""
+        assert (
+            0 <= pixel_location[0] < image.shape[0] and 0 <= pixel_location[1] < image.shape[1]
+        ), "Pixel location is outside the image."
+
+        top_left_x = max(0, pixel_location[0] - radius_px)
+        top_left_y = max(0, pixel_location[1] - radius_px)
+        bottom_right_x = min(image.shape[0], pixel_location[0] + radius_px + 1)
+        bottom_right_y = min(image.shape[1], pixel_location[1] + radius_px + 1)
+        cropped_image = image[top_left_x:bottom_right_x, top_left_y:bottom_right_y]
+
+        circle_mask = np.zeros(cropped_image.shape[:2], dtype=np.uint8)
+        circle_mask = cv2.circle(
+            circle_mask,
+            (radius_px, radius_px),
+            radius_px,
+            color=255,
+            thickness=-1,
+        )
+        overlap_values = cropped_image[circle_mask > 0]
+        overlap_values = overlap_values[overlap_values > 0]
+        return overlap_values.astype(np.float32)
+
+    def debug_check_value_map_helper_consistency(
+        self,
+        point: np.ndarray,
+        radius_m: float = 0.5,
+        channel_idx: int = 0,
+        atol: float = 1e-5,
+    ) -> None:
+        """Check helper-based median equals the baseline sort_waypoints value."""
+        reduce_fn = None
+        if self._value_channels > 1:
+            reduce_fn = lambda values: [value[channel_idx] for value in values]
+        _, baseline_values = self.sort_waypoints(np.array([point]), radius_m, reduce_fn=reduce_fn)
+        baseline_val = baseline_values[0]
+
+        radius_px = int(radius_m * self.pixels_per_meter)
+        point_px = self._xy_to_value_map_px(point)
+        values = self._positive_values_within_radius(
+            self._value_map[..., channel_idx],
+            point_px,
+            radius_px,
+        )
+        helper_val = -1.0 if values.size == 0 else float(np.median(values))
+
+        print(
+            "[MC helper check]",
+            f"point={point}",
+            f"point_px={point_px}",
+            f"baseline={float(baseline_val):.6f}",
+            f"helper={helper_val:.6f}",
+            f"num_values={values.size}",
+        )
+
+        assert abs(float(baseline_val) - float(helper_val)) < atol, (
+            f"ValueMap helper mismatch: baseline={baseline_val}, "
+            f"helper={helper_val}, point={point}, point_px={point_px}"
+        )
+
+    def mc_samples_at_waypoint(
+        self,
+        point: np.ndarray,
+        radius_m: float = 0.5,
+        n_samples: int = 5,
+        keep_prob: float = 0.8,
+        noise_rel: float = 0.1,
+        sample_seeds: Optional[Iterable[int]] = None,
+        channel_idx: int = 0,
+        min_values_for_mc: int = 3,
+    ) -> List[float]:
+        """Return MC-perturbed local median scores at a waypoint."""
+        radius_px = int(radius_m * self.pixels_per_meter)
+        point_px = self._xy_to_value_map_px(point)
+        values = self._positive_values_within_radius(
+            self._value_map[..., channel_idx],
+            point_px,
+            radius_px,
+        )
+
+        if values.size == 0:
+            return [-1.0] * n_samples
+
+        baseline_val = float(np.median(values))
+        if values.size < min_values_for_mc:
+            return [baseline_val] * n_samples
+
+        local_std = float(np.std(values))
+        noise_std = noise_rel * max(local_std, 1e-6)
+
+        if sample_seeds is None:
+            sample_seeds = list(range(n_samples))
+        else:
+            sample_seeds = list(sample_seeds)
+
+        if len(sample_seeds) != n_samples:
+            raise ValueError(f"sample_seeds length {len(sample_seeds)} != n_samples {n_samples}")
+
+        samples: List[float] = []
+        for seed in sample_seeds:
+            rng = np.random.default_rng(int(seed))
+            keep_mask = rng.random(values.shape[0]) < keep_prob
+            sampled_values = values[keep_mask]
+
+            if sampled_values.size == 0:
+                samples.append(baseline_val)
+                continue
+
+            if noise_rel > 0.0:
+                sampled_values = sampled_values + rng.normal(
+                    loc=0.0,
+                    scale=noise_std,
+                    size=sampled_values.shape,
+                )
+
+            sampled_values = sampled_values[sampled_values > 0]
+            if sampled_values.size == 0:
+                samples.append(baseline_val)
+            else:
+                samples.append(float(np.median(sampled_values)))
+
+        return samples
+
+    def mc_summary_at_waypoint(
+        self,
+        point: np.ndarray,
+        radius_m: float = 0.5,
+        n_samples: int = 5,
+        keep_prob: float = 0.8,
+        noise_rel: float = 0.1,
+        lambda_risk: float = 1.0,
+        sample_seeds: Optional[Iterable[int]] = None,
+        channel_idx: int = 0,
+        min_values_for_mc: int = 3,
+    ) -> Dict[str, object]:
+        """Compute MC mean, std, and risk-aware score at a waypoint."""
+        samples = self.mc_samples_at_waypoint(
+            point=point,
+            radius_m=radius_m,
+            n_samples=n_samples,
+            keep_prob=keep_prob,
+            noise_rel=noise_rel,
+            sample_seeds=sample_seeds,
+            channel_idx=channel_idx,
+            min_values_for_mc=min_values_for_mc,
+        )
+
+        arr = np.asarray(samples, dtype=np.float32)
+        mean = float(np.mean(arr))
+        std = float(np.std(arr, ddof=1)) if arr.size > 1 else 0.0
+        risk_score = float(mean - lambda_risk * std)
+
+        return {
+            "samples": [float(x) for x in samples],
+            "mean": mean,
+            "std": std,
+            "risk_score": risk_score,
+        }
 
     def visualize(
         self,

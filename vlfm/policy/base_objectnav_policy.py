@@ -58,6 +58,16 @@ class BaseObjectNavPolicy(BasePolicy):
         coco_threshold: float = 0.8,
         non_coco_threshold: float = 0.4,
         frontier_selector: str = "semantic",
+        mc_top_k: int = 3,
+        mc_n_samples: int = 5,
+        mc_keep_prob: float = 0.8,
+        mc_noise_rel: float = 0.1,
+        mc_lambda: float = 1.0,
+        mc_radius_m: float = 0.5,
+        mc_channel_idx: int = 0,
+        mc_min_values_for_mc: int = 3,
+        mc_seed_master: int = 12345,
+        mc_debug: bool = False,
         *args: Any,
         **kwargs: Any,
     ) -> None:
@@ -77,6 +87,18 @@ class BaseObjectNavPolicy(BasePolicy):
         self._coco_threshold = coco_threshold
         self._non_coco_threshold = non_coco_threshold
         self._frontier_selector = frontier_selector.lower()
+        self._mc_top_k = mc_top_k
+        self._mc_n_samples = mc_n_samples
+        self._mc_keep_prob = mc_keep_prob
+        self._mc_noise_rel = mc_noise_rel
+        self._mc_lambda = mc_lambda
+        self._mc_radius_m = mc_radius_m
+        self._mc_channel_idx = mc_channel_idx
+        self._mc_min_values_for_mc = mc_min_values_for_mc
+        self._mc_seed_master = mc_seed_master
+        self._mc_debug = mc_debug
+        self._mc_episode_id: object = "unknown"
+        self._mc_decision_counter = 0
 
         self._num_steps = 0
         self._did_reset = False
@@ -393,6 +415,16 @@ class VLFMConfig:
     non_coco_threshold: float = 0.4
     agent_radius: float = 0.18
     frontier_selector: str = "semantic"
+    mc_top_k: int = 3
+    mc_n_samples: int = 5
+    mc_keep_prob: float = 0.8
+    mc_noise_rel: float = 0.1
+    mc_lambda: float = 1.0
+    mc_radius_m: float = 0.5
+    mc_channel_idx: int = 0
+    mc_min_values_for_mc: int = 3
+    mc_seed_master: int = 12345
+    mc_debug: bool = False
 
     @classmethod  # type: ignore
     @property

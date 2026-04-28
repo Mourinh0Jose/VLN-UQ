@@ -1,0 +1,89 @@
+=== MC Mean ===
+
+Total episodes: 150
+
+
+Metric   | Average
+---------+--------
+Success  | 50.00% 
+SPL      | 29.01% 
+Soft SPL | 35.84% 
+Failure Cause                                            | Frequency | Percentage
+---------------------------------------------------------+-----------+-----------
+succeeded!                                               | 75        | 50.00%    
+false_positive                                           | 41        | 27.33%    
+never_saw_target_did_not_travel_stairs_likely_infeasible | 17        | 11.33%    
+never_saw_target_did_not_travel_stairs_feasible          | 9         | 6.00%     
+false_negative                                           | 4         | 2.67%     
+bad_stop_true_positive                                   | 3         | 2.00%     
+never_saw_target_traveled_stairs_likely_infeasible       | 1         | 0.67%     
+
+Category     | Average Failure Rate
+-------------+---------------------
+tv           | 76.19% (16/21)      
+couch        | 60.00% (15/25)      
+bed          | 50.00% (13/26)      
+toilet       | 54.17% (13/24)      
+potted plant | 78.57% (11/14)      
+chair        | 17.50% (7/40)       
+
+Conditioned on failure cause: false_positive
+Category     | % Occurrence for false_positive
+-------------+--------------------------------
+couch        | 26.83% (11)                    
+potted plant | 24.39% (10)                    
+tv           | 24.39% (10)                    
+toilet       | 14.63% (6)                     
+bed          | 4.88% (2)                      
+chair        | 4.88% (2)                      
+
+Conditioned on failure cause: false_negative
+Category | % Occurrence for false_negative
+---------+--------------------------------
+chair    | 50.00% (2)                     
+bed      | 50.00% (2)                     
+
+
+=== VLFM Original (n=150) ===
+  Success:  0.520 +/- 0.080
+  SPL:      0.298 +/- 0.056
+  SoftSPL:  0.370 +/- 0.052
+  Dist2Goal:5.323
+  Failure causes:
+    - false_positive: 40
+    - never_saw_target_did_not_travel_stairs_likely_infeasible: 19
+    - never_saw_target_did_not_travel_stairs_feasible: 8
+    - bad_stop_true_positive: 3
+    - false_negative: 1
+    - never_saw_target_traveled_stairs_likely_infeasible: 1
+
+=== Greedy Frontier (n=150) ===
+  Success:  0.500 +/- 0.080
+  SPL:      0.290 +/- 0.055
+  SoftSPL:  0.358 +/- 0.052
+  Dist2Goal:5.229
+  Failure causes:
+    - false_positive: 41
+    - never_saw_target_did_not_travel_stairs_likely_infeasible: 17
+    - never_saw_target_did_not_travel_stairs_feasible: 9
+    - false_negative: 4
+    - bad_stop_true_positive: 3
+    - never_saw_target_traveled_stairs_likely_infeasible: 1
+
+=== Paired (n=150) ===
+  mean Delta Success (VLFM - Baseline): +0.020 +/- 0.043
+  mean Delta SPL     (VLFM - Baseline): +0.008 +/- 0.027
+  mean Delta SoftSPL (VLFM - Baseline): +0.012 +/- 0.022
+  success flips: 11
+  Flip episodes:
+    - scene=4ok3usBNeis ep=21 VLFM=1(did_not_fail) Baseline=0(false_positive)
+    - scene=5cdEh9F2hJL ep=18 VLFM=0(false_positive) Baseline=1(did_not_fail)
+    - scene=6s7QHgap2fW ep=2 VLFM=0(never_saw_target_did_not_travel_stairs_feasible) Baseline=1(did_not_fail)
+    - scene=6s7QHgap2fW ep=8 VLFM=0(false_positive) Baseline=1(did_not_fail)
+    - scene=TEEsavR23oF ep=13 VLFM=1(did_not_fail) Baseline=0(never_saw_target_did_not_travel_stairs_feasible)
+    - scene=TEEsavR23oF ep=24 VLFM=1(did_not_fail) Baseline=0(false_negative)
+    - scene=wcojb4TFT35 ep=11 VLFM=1(did_not_fail) Baseline=0(false_negative)
+    - scene=wcojb4TFT35 ep=16 VLFM=0(false_positive) Baseline=1(did_not_fail)
+    - scene=wcojb4TFT35 ep=27 VLFM=1(did_not_fail) Baseline=0(never_saw_target_did_not_travel_stairs_feasible)
+    - scene=wcojb4TFT35 ep=3 VLFM=1(did_not_fail) Baseline=0(false_positive)
+    - scene=wcojb4TFT35 ep=5 VLFM=1(did_not_fail) Baseline=0(false_negative)

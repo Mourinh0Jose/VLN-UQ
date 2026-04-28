@@ -13,9 +13,19 @@ EPISODES="${EPISODES:-1}"
 export HYDRA_FULL_ERROR="${HYDRA_FULL_ERROR:-1}"
 export __EGL_VENDOR_LIBRARY_FILENAMES="${__EGL_VENDOR_LIBRARY_FILENAMES:-/usr/share/glvnd/egl_vendor.d/10_nvidia.json}"
 
-exec "${VLFM_PYTHON}" -m vlfm.run \
+# Habitat Baselines treats any SLURM allocation with SLURM_NTASKS > 1 as a
+# distributed/DDP job. These eval runs are intentionally single-process Habitat
+# jobs, even when four methods are launched concurrently by the wrapper script.
+exec env \
+  -u LOCAL_RANK \
+  -u RANK \
+  -u WORLD_SIZE \
+  -u SLURM_JOBID \
+  -u SLURM_LOCALID \
+  -u SLURM_PROCID \
+  -u SLURM_NTASKS \
+  "${VLFM_PYTHON}" -m vlfm.run \
   "habitat_baselines.test_episode_count=${EPISODES}" \
   "habitat_baselines.eval.video_option=[]" \
   "habitat_baselines.eval.split=${SPLIT}" \
   "$@"
-

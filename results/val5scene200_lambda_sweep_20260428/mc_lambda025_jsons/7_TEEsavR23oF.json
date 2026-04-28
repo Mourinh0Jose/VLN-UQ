@@ -1,0 +1,340 @@
+{
+    "episode_id": "7",
+    "scene_id": "TEEsavR23oF",
+    "failure_cause": "false_positive",
+    "distance_to_goal": 22.1083927154541,
+    "success": 0.0,
+    "spl": 0.0,
+    "soft_spl": 0.0,
+    "distance_to_goal_reward": -0.0,
+    "traveled_stairs": 0,
+    "target_object": "potted plant",
+    "gps": "[      1.741      1.8928]",
+    "yaw": -89.99998201391065,
+    "target_detected": true,
+    "stop_called": true,
+    "render_below_images": [
+        "target_object"
+    ],
+    "mc_decision_log": [
+        {
+            "decision_step": 0,
+            "selector": "mc_risk_aware",
+            "num_frontiers": 7,
+            "mc_top_k": 3,
+            "mc_n_samples": 5,
+            "mc_keep_prob": 0.8,
+            "mc_noise_rel": 0.1,
+            "mc_lambda": 0.25,
+            "sample_seeds": [
+                2696479963,
+                2608892598,
+                254678469,
+                1540739538,
+                1548594271
+            ],
+            "baseline_top_frontier_xy": [
+                -1.149999976158142,
+                -2.1500000953674316
+            ],
+            "mc_top_frontier_xy": [
+                0.4749999940395355,
+                -1.125
+            ],
+            "final_selected_frontier_xy": [
+                0.4749999940395355,
+                -1.125
+            ],
+            "mc_changed_top_from_baseline": true,
+            "changed_from_baseline": true,
+            "cyclic_suppressed": false,
+            "top_two_values": [
+                0.11796556042645534,
+                0.11787188187008724
+            ],
+            "selected_value": 0.11796556042645534,
+            "selected_mc_std": 0.00010655812366167083,
+            "topk_frontier_records": [
+                {
+                    "frontier_rank_baseline": 1,
+                    "frontier_xy": [
+                        0.4749999940395355,
+                        -1.125
+                    ],
+                    "baseline_value": 0.11811038820950759,
+                    "mc_samples": [
+                        0.11808654092607117,
+                        0.11806404182902323,
+                        0.11783315045762144,
+                        0.11804355746570741,
+                        0.11793368543507154
+                    ],
+                    "mc_mean": 0.11799219995737076,
+                    "mc_std": 0.00010655812366167083,
+                    "risk_score": 0.11796556042645534,
+                    "selected_by_baseline": false,
+                    "selected_by_mc_risk": true,
+                    "selected_final": true
+                },
+                {
+                    "frontier_rank_baseline": 0,
+                    "frontier_xy": [
+                        -1.149999976158142,
+                        -2.1500000953674316
+                    ],
+                    "baseline_value": 0.12101205684046745,
+                    "mc_samples": [
+                        0.11597988159684652,
+                        0.12001429925361394,
+                        0.12073943639418136,
+                        0.11557484735255069,
+                        0.1201778391579969
+                    ],
+                    "mc_mean": 0.11849726736545563,
+                    "mc_std": 0.002501541981473565,
+                    "risk_score": 0.11787188187008724,
+                    "selected_by_baseline": true,
+                    "selected_by_mc_risk": false,
+                    "selected_final": false
+                },
+                {
+                    "frontier_rank_baseline": 2,
+                    "frontier_xy": [
+                        2.91035532951355,
+                        -0.10000000149011612
+                    ],
+                    "baseline_value": 0.11584236609659998,
+                    "mc_samples": [
+                        0.11578480031827487,
+                        0.11577255491867353,
+                        0.11579440733756471,
+                        0.11580682925643243,
+                        0.11574601864297668
+                    ],
+                    "mc_mean": 0.11578092724084854,
+                    "mc_std": 2.3218155547510833e-05,
+                    "risk_score": 0.11577512270196166,
+                    "selected_by_baseline": false,
+                    "selected_by_mc_risk": false,
+                    "selected_final": false
+                }
+            ]
+        },
+        {
+            "decision_step": 1,
+            "selector": "mc_risk_aware",
+            "num_frontiers": 7,
+            "mc_top_k": 3,
+            "mc_n_samples": 5,
+            "mc_keep_prob": 0.8,
+            "mc_noise_rel": 0.1,
+            "mc_lambda": 0.25,
+            "sample_seeds": [
+                3605490762,
+                1202304002,
+                4290958486,
+                408621806,
+                1463359284
+            ],
+            "baseline_top_frontier_xy": [
+                -1.149999976158142,
+                -2.1500000953674316
+            ],
+            "mc_top_frontier_xy": [
+                0.4749999940395355,
+                -1.125
+            ],
+            "final_selected_frontier_xy": [
+                0.4749999940395355,
+                -1.125
+            ],
+            "mc_changed_top_from_baseline": true,
+            "changed_from_baseline": true,
+            "cyclic_suppressed": false,
+            "top_two_values": [
+                0.11808760283747688,
+                0.11798363795969635
+            ],
+            "selected_value": 0.11808760283747688,
+            "selected_mc_std": 0.000269897049292922,
+            "topk_frontier_records": [
+                {
+                    "frontier_rank_baseline": 1,
+                    "frontier_xy": [
+                        0.4749999940395355,
+                        -1.125
+                    ],
+                    "baseline_value": 0.11811038820950759,
+                    "mc_samples": [
+                        0.11822173389438577,
+                        0.11793974730730622,
+                        0.1178274245568059,
+                        0.11829381010103474,
+                        0.11849266243828606
+                    ],
+                    "mc_mean": 0.11815507709980011,
+                    "mc_std": 0.000269897049292922,
+                    "risk_score": 0.11808760283747688,
+                    "selected_by_baseline": false,
+                    "selected_by_mc_risk": true,
+                    "selected_final": true
+                },
+                {
+                    "frontier_rank_baseline": 0,
+                    "frontier_xy": [
+                        -1.149999976158142,
+                        -2.1500000953674316
+                    ],
+                    "baseline_value": 0.12101205684046745,
+                    "mc_samples": [
+                        0.1166189907748642,
+                        0.11959608107126903,
+                        0.11982015532426152,
+                        0.12028799779040222,
+                        0.11606425626188616
+                    ],
+                    "mc_mean": 0.11847750097513199,
+                    "mc_std": 0.001975452061742544,
+                    "risk_score": 0.11798363795969635,
+                    "selected_by_baseline": true,
+                    "selected_by_mc_risk": false,
+                    "selected_final": false
+                },
+                {
+                    "frontier_rank_baseline": 2,
+                    "frontier_xy": [
+                        2.91035532951355,
+                        -0.10000000149011612
+                    ],
+                    "baseline_value": 0.11451278119738394,
+                    "mc_samples": [
+                        0.1144132017294455,
+                        0.11449168896774603,
+                        0.11446629403291096,
+                        0.11442462270455411,
+                        0.11447948241380082
+                    ],
+                    "mc_mean": 0.11445505917072296,
+                    "mc_std": 3.443336390773766e-05,
+                    "risk_score": 0.11444645082974603,
+                    "selected_by_baseline": false,
+                    "selected_by_mc_risk": false,
+                    "selected_final": false
+                }
+            ]
+        },
+        {
+            "decision_step": 2,
+            "selector": "mc_risk_aware",
+            "num_frontiers": 7,
+            "mc_top_k": 3,
+            "mc_n_samples": 5,
+            "mc_keep_prob": 0.8,
+            "mc_noise_rel": 0.1,
+            "mc_lambda": 0.25,
+            "sample_seeds": [
+                457464761,
+                3734467127,
+                3948643490,
+                2995881683,
+                3488527187
+            ],
+            "baseline_top_frontier_xy": [
+                -1.149999976158142,
+                -2.1500000953674316
+            ],
+            "mc_top_frontier_xy": [
+                -1.149999976158142,
+                -2.1500000953674316
+            ],
+            "final_selected_frontier_xy": [
+                0.4749999940395355,
+                -1.125
+            ],
+            "mc_changed_top_from_baseline": false,
+            "changed_from_baseline": true,
+            "cyclic_suppressed": false,
+            "top_two_values": [
+                0.11999471200397238,
+                0.11790484304219717
+            ],
+            "selected_value": 0.11790484304219717,
+            "selected_mc_std": 0.0002834155166056007,
+            "topk_frontier_records": [
+                {
+                    "frontier_rank_baseline": 0,
+                    "frontier_xy": [
+                        -1.149999976158142,
+                        -2.1500000953674316
+                    ],
+                    "baseline_value": 0.12101205684046745,
+                    "mc_samples": [
+                        0.12006473865598172,
+                        0.11957550446639759,
+                        0.1207058107289996,
+                        0.12055906428719892,
+                        0.11969774845129881
+                    ],
+                    "mc_mean": 0.120120570063591,
+                    "mc_std": 0.0005034322384744883,
+                    "risk_score": 0.11999471200397238,
+                    "selected_by_baseline": true,
+                    "selected_by_mc_risk": true,
+                    "selected_final": false
+                },
+                {
+                    "frontier_rank_baseline": 1,
+                    "frontier_xy": [
+                        0.4749999940395355,
+                        -1.125
+                    ],
+                    "baseline_value": 0.11811038820950759,
+                    "mc_samples": [
+                        0.11818057670175058,
+                        0.11815287485814213,
+                        0.11791924752144001,
+                        0.11750326802222105,
+                        0.11812252304443696
+                    ],
+                    "mc_mean": 0.11797569692134857,
+                    "mc_std": 0.0002834155166056007,
+                    "risk_score": 0.11790484304219717,
+                    "selected_by_baseline": false,
+                    "selected_by_mc_risk": false,
+                    "selected_final": true
+                },
+                {
+                    "frontier_rank_baseline": 2,
+                    "frontier_xy": [
+                        3.3146445751190186,
+                        -0.800000011920929
+                    ],
+                    "baseline_value": 0.11550300255250984,
+                    "mc_samples": [
+                        0.11530489271089527,
+                        0.11522560762793013,
+                        0.11531621518251468,
+                        0.11526713275630393,
+                        0.11531015166627506
+                    ],
+                    "mc_mean": 0.11528480052947998,
+                    "mc_std": 3.824070518021472e-05,
+                    "risk_score": 0.11527524035318493,
+                    "selected_by_baseline": false,
+                    "selected_by_mc_risk": false,
+                    "selected_final": false
+                }
+            ]
+        }
+    ],
+    "mc_episode_summary": {
+        "method": "mc_risk_aware",
+        "episode_seed_id": "data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb:7",
+        "num_decisions": 3,
+        "num_changed_decisions": 3,
+        "num_mc_changed_top_decisions": 2,
+        "avg_selected_mc_std": 0.00021995689652006453,
+        "avg_all_topk_mc_std": 0.0006373543550984727,
+        "cyclic_suppression_count": 0
+    }
+}

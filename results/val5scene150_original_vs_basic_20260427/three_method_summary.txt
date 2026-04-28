@@ -1,0 +1,133 @@
+=== Semantic / Original VLFM ===
+
+Total episodes: 150
+
+
+Metric   | Average
+---------+--------
+Success  | 52.00% 
+SPL      | 29.84% 
+Soft SPL | 37.04% 
+Failure Cause                                            | Frequency | Percentage
+---------------------------------------------------------+-----------+-----------
+succeeded!                                               | 78        | 52.00%    
+false_positive                                           | 40        | 26.67%    
+never_saw_target_did_not_travel_stairs_likely_infeasible | 19        | 12.67%    
+never_saw_target_did_not_travel_stairs_feasible          | 8         | 5.33%     
+bad_stop_true_positive                                   | 3         | 2.00%     
+never_saw_target_traveled_stairs_likely_infeasible       | 1         | 0.67%     
+false_negative                                           | 1         | 0.67%     
+
+Category     | Average Failure Rate
+-------------+---------------------
+tv           | 80.95% (17/21)      
+couch        | 60.00% (15/25)      
+toilet       | 58.33% (14/24)      
+potted plant | 85.71% (12/14)      
+bed          | 38.46% (10/26)      
+chair        | 10.00% (4/40)       
+
+Conditioned on failure cause: false_positive
+Category     | % Occurrence for false_positive
+-------------+--------------------------------
+couch        | 27.50% (11)                    
+tv           | 27.50% (11)                    
+potted plant | 25.00% (10)                    
+toilet       | 12.50% (5)                     
+chair        | 5.00% (2)                      
+bed          | 2.50% (1)                      
+
+Conditioned on failure cause: false_negative
+Category | % Occurrence for false_negative
+---------+--------------------------------
+bed      | 100.00% (1)                    
+
+=== Cheapest / Basic Frontier ===
+
+Total episodes: 150
+
+
+Metric   | Average
+---------+--------
+Success  | 49.33% 
+SPL      | 29.96% 
+Soft SPL | 37.78% 
+Failure Cause                                            | Frequency | Percentage
+---------------------------------------------------------+-----------+-----------
+succeeded!                                               | 74        | 49.33%    
+false_positive                                           | 39        | 26.00%    
+never_saw_target_did_not_travel_stairs_likely_infeasible | 19        | 12.67%    
+never_saw_target_did_not_travel_stairs_feasible          | 11        | 7.33%     
+bad_stop_true_positive                                   | 4         | 2.67%     
+false_negative                                           | 1         | 0.67%     
+never_saw_target_traveled_stairs_likely_infeasible       | 1         | 0.67%     
+never_saw_target_traveled_stairs_feasible                | 1         | 0.67%     
+
+Category     | Average Failure Rate
+-------------+---------------------
+tv           | 85.71% (18/21)      
+couch        | 60.00% (15/25)      
+toilet       | 58.33% (14/24)      
+potted plant | 100.00% (14/14)     
+bed          | 38.46% (10/26)      
+chair        | 12.50% (5/40)       
+
+Conditioned on failure cause: false_positive
+Category     | % Occurrence for false_positive
+-------------+--------------------------------
+potted plant | 30.77% (12)                    
+tv           | 28.21% (11)                    
+couch        | 23.08% (9)                     
+chair        | 7.69% (3)                      
+toilet       | 7.69% (3)                      
+bed          | 2.56% (1)                      
+
+Conditioned on failure cause: false_negative
+Category | % Occurrence for false_negative
+---------+--------------------------------
+couch    | 100.00% (1)                    
+
+=== MC Mean ===
+
+Total episodes: 150
+
+
+Metric   | Average
+---------+--------
+Success  | 50.00% 
+SPL      | 29.01% 
+Soft SPL | 35.84% 
+Failure Cause                                            | Frequency | Percentage
+---------------------------------------------------------+-----------+-----------
+succeeded!                                               | 75        | 50.00%    
+false_positive                                           | 41        | 27.33%    
+never_saw_target_did_not_travel_stairs_likely_infeasible | 17        | 11.33%    
+never_saw_target_did_not_travel_stairs_feasible          | 9         | 6.00%     
+false_negative                                           | 4         | 2.67%     
+bad_stop_true_positive                                   | 3         | 2.00%     
+never_saw_target_traveled_stairs_likely_infeasible       | 1         | 0.67%     
+
+Category     | Average Failure Rate
+-------------+---------------------
+tv           | 76.19% (16/21)      
+couch        | 60.00% (15/25)      
+bed          | 50.00% (13/26)      
+toilet       | 54.17% (13/24)      
+potted plant | 78.57% (11/14)      
+chair        | 17.50% (7/40)       
+
+Conditioned on failure cause: false_positive
+Category     | % Occurrence for false_positive
+-------------+--------------------------------
+couch        | 26.83% (11)                    
+potted plant | 24.39% (10)                    
+tv           | 24.39% (10)                    
+toilet       | 14.63% (6)                     
+bed          | 4.88% (2)                      
+chair        | 4.88% (2)                      
+
+Conditioned on failure cause: false_negative
+Category | % Occurrence for false_negative
+---------+--------------------------------
+chair    | 50.00% (2)                     
+bed      | 50.00% (2)                     
